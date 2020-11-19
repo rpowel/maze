@@ -5,16 +5,16 @@ Created on Wed Nov 11 10:44:44 2020.
 
 @author: powel
 """
-import os
 import sys
 import numpy as np
 from scipy import spatial
-import matplotlib.pyplot as plt
-from skimage.transform import resize
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from mazegui import Ui_mazeMenu
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import random
-os.environ['SDL_AUDIODRIVER'] = 'dsp'
+
 
 class Colors:
     BLACK = (0, 0, 0)
@@ -300,6 +300,7 @@ class KruskalMaze:
 class App():
     def __init__(self):
         self._initWindow()
+        self._ax = None
 
         self._mazeSelectButtons = [
             self.ui.randomButton,
@@ -340,7 +341,14 @@ class App():
 
     def _drawMaze(self):
         maze = self._makeMaze()
-        print(maze)
+        canvas = FigureCanvas(Figure(figsize=(20, 10)))
+        if self._ax is None:
+            self.ui.verticalLayout_3.addWidget(canvas)
+        else:
+            self._ax = None
+        self._ax = canvas.figure.subplots()
+        self._ax.pcolor(maze)
+        self._ax.axis('off')
 
 
 if __name__ == '__main__':
