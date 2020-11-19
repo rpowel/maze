@@ -341,7 +341,7 @@ class App():
 
     def _drawMaze(self):
         maze = self._makeMaze()
-        canvas = FigureCanvas(Figure(figsize=(20, 10)))
+        canvas = FigureCanvas(Figure())
         if self._ax is None:
             self.ui.verticalLayout_3.addWidget(canvas)
         else:
