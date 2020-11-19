@@ -268,7 +268,7 @@
          <item>
           <widget class="QRadioButton" name="kuzatsButton">
            <property name="text">
-            <string>Kurzats</string>
+            <string>Kruskal</string>
            </property>
           </widget>
          </item>

@@ -6,11 +6,13 @@ Created on Wed Nov 11 10:44:44 2020.
 @author: powel
 """
 import os
+import sys
 import numpy as np
 from scipy import spatial
 import matplotlib.pyplot as plt
 from skimage.transform import resize
-import pyglet
+from PyQt5 import QtCore, QtGui, QtWidgets
+from mazegui import Ui_mazeMenu
 import random
 os.environ['SDL_AUDIODRIVER'] = 'dsp'
 
@@ -22,12 +24,12 @@ class Colors:
 
 
 class Maze:
-    def make_maze(self, n_x, n_y, maze_type='prim'):
-        if maze_type == 'random':
+    def make_maze(self, n_x, n_y, maze_type='Prim'):
+        if maze_type == 'Random':
             self.maze = RandomMaze().make_maze(n_x, n_y)
-        elif maze_type == 'prim':
+        elif maze_type == 'Prim':
             self.maze = PrimMaze().make_maze(n_x, n_y)
-        elif maze_type == 'kruskal':
+        elif maze_type == 'Kruskal':
             self.maze = KruskalMaze().make_maze(n_x, n_y)
         else:
             self.maze = None
@@ -64,6 +66,7 @@ class Maze:
 
 
 class RandomMaze:
+    # TODO: Finish random mazes
     def make_maze(self, n_x, n_y):
         maze_arr = np.zeros([n_x, n_y], dtype=int)
         for i in range(n_x):
@@ -181,7 +184,6 @@ class KruskalMaze:
             if self._check_final():
                 break
         self._prepare_final()
-        print(self.maze)
         return self.maze
 
     def _make_walls(self):
@@ -296,104 +298,49 @@ class KruskalMaze:
 
 
 class App():
-    window = pyglet.window.Window()
-    window.set_visible()
-    pyglet.app.run()
+    def __init__(self):
+        self._initWindow()
 
+        self._mazeSelectButtons = [
+            self.ui.randomButton,
+            self.ui.primButton,
+            self.ui.kuzatsButton
+            ]
 
-# class App(Maze):
-#     window_height = 600
-#     window_width = 900
+        self.ui.drawButton.clicked.connect(self._drawMaze)
 
-#     window_pos_x = 0
-#     window_pos_y = 0
+        self._exit()
 
-#     def __init__(self):
-#         pygame.init()
-#         self._running = True
-#         self._init_screen()
-#         self._loop()
+    def _initWindow(self):
+        self.app = QtWidgets.QApplication(sys.argv)
+        self.mazeMenu = QtWidgets.QDialog()
+        self.ui = Ui_mazeMenu()
+        self.ui.setupUi(self.mazeMenu)
+        self.mazeMenu.show()
 
-#     def _init_screen(self):
-#         os.environ['SDL_VIDEO_WINDOW_POS'] = (
-#             f'{self.window_pos_x}, {self.window_pos_y}')
+    def _exit(self):
+        sys.exit(self.app.exec_())
 
-#         self.screen = pygame.display.set_mode(
-#             [self.window_width, self.window_height])
+    def _getChoice(self):
+        for button in self._mazeSelectButtons:
+            if button.isChecked():
+                choice = button.text()
+                return choice
 
-#         self.maze_canvas = pygame.Surface((600, 600))
-#         self.maze_frame = pygame.Rect(0, 0, 600, 600)
+    def _getDimensions(self):
+        nX = self.ui.nXBox.value()
+        nY = self.ui.nYBox.value()
+        return nX, nY
 
-#         self.setting_canvas = pygame.Surface((300, 600))
-#         self.setting_frame = pygame.Rect(0, 0, 300, 600)
+    def _makeMaze(self):
+        choice = self._getChoice()
+        nX, nY = self._getDimensions()
+        maze = Maze().make_maze(nX, nY, maze_type=choice)
+        return maze
 
-#         self._draw_maze(self.maze_canvas, 20, 20)
-#         self._init_settings()
-
-#     def _init_settings(self):
-#         input_1 = TextInput(initial_string='Dim_x')
-#         input_2 = TextInput(initial_string='Dim_y')
-#         self.inputs = [
-#             input_1,
-#             input_2
-#             ]
-
-#     def _draw_settings(self, x, y):
-#         self.setting_canvas.fill(Colors.WHITE)
-#         self.screen.blit(self.setting_canvas, (x, y))
-#         x_i = x+10
-#         y_i = y+10
-#         for box in self.inputs:
-#             self.screen.blit(box.get_surface(), (x_i, y_i))
-#             y_i += 30
-
-#     def _draw_maze(self, frame, n_x, n_y, maze_type='prim'):
-#         self.maze = self.make_maze(n_x, n_y, maze_type=maze_type)
-#         self.square_size_x = int(self.window_width/3*2/(n_x+3))
-#         self.square_size_y = int(self.window_height/(n_y+3))
-#         x = self.square_size_x/2
-#         for i in range(self.maze.shape[0]):
-#             y = self.square_size_y/2
-#             for j in range(self.maze.shape[1]):
-#                 if self.maze[i, j] == 1:
-#                     color = Colors.BLACK
-#                 elif self.maze[i, j] == 0:
-#                     color = Colors.WHITE
-#                 elif self.maze[i, j] == 2:
-#                     color = Colors.GREEN
-#                 elif self.maze[i, j] == 3:
-#                     color = Colors.RED
-
-#                 pygame.draw.rect(
-#                     frame,
-#                     color,
-#                     pygame.Rect(x, y, self.square_size_x, self.square_size_y),
-#                     0
-#                 )
-#                 y += self.square_size_y
-#             x += self.square_size_x
-
-#     def _handle_events(self):
-#         events = pygame.event.get()
-#         for box in self.inputs:
-#             box.update(events)
-#         for event in events:
-#             if event.type == pygame.QUIT:
-#                 self._running = False
-#                 self._exit()
-
-#     def _exit(self):
-#         pygame.quit()
-
-#     def _loop(self):
-#         clock = pygame.time.Clock()
-#         while self._running:
-#             self._draw_settings(600, 0)
-#             self.screen.blit(self.maze_canvas, (0,0), self.maze_frame)
-#             pygame.display.flip()
-#             self._handle_events()
-#             if self._running:
-#                 clock.tick(30)
+    def _drawMaze(self):
+        maze = self._makeMaze()
+        print(maze)
 
 
 if __name__ == '__main__':

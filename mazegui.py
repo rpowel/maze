@@ -128,7 +128,7 @@ class Ui_mazeMenu(object):
         self.mazeSelectLabel.setText(_translate("mazeMenu", "TextLabel"))
         self.randomButton.setText(_translate("mazeMenu", "Random"))
         self.primButton.setText(_translate("mazeMenu", "Prim"))
-        self.kuzatsButton.setText(_translate("mazeMenu", "Kurzats"))
+        self.kuzatsButton.setText(_translate("mazeMenu", "Kruskal"))
 
 
 if __name__ == "__main__":
