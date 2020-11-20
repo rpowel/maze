@@ -9,9 +9,13 @@ import sys
 from PyQt5 import QtWidgets
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.colors import LinearSegmentedColormap
 
 from mazes import Maze
 from mazegui import Ui_mazeMenu
+
+COLORMAP = LinearSegmentedColormap.from_list(
+    'maze', [(1, 1, 1), (0, 0, 0), (0, 1, 0), (1, 0, 0)], N = 4)
 
 
 class App():
@@ -71,7 +75,7 @@ class App():
             )
         self.ui.verticalLayout_3.addWidget(self.canvas)
         self._ax = self.canvas.figure.subplots()
-        self._ax.pcolormesh(maze, edgecolor=None)
+        self._ax.pcolormesh(maze, edgecolor=None, cmap=COLORMAP)
         self._ax.axis('off')
         self._ax.set_facecolor('#000000')
         self.ui.drawButton.setText("Draw")

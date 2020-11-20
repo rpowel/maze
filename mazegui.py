@@ -296,7 +296,7 @@ class Ui_mazeMenu(object):
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.frame)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(-11, -11, 521, 531))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(-11, -11, 521, 521))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)

@@ -5,10 +5,9 @@ Created on Wed Nov 11 10:44:44 2020.
 
 @author: powel
 """
-import numpy as np
+from numpy import zeros, ones, ravel, full, arange, reshape
 from scipy import spatial
-from matplotlib.pyplot import pcolor
-import random
+from random import randint, random
 
 
 class Maze:
@@ -28,21 +27,21 @@ class Maze:
         return self.maze
 
     def _fill_square(self, percentage=50):
-        random_ = random.randint(0, 101)
+        random_ = randint(0, 101)
         if random_ > percentage:
             return 1
         return 0
 
     def _set_entrance(self):
         while True:
-            x, y = random.randint(1, self.maze.shape[0]-1), 0
+            x, y = randint(1, self.maze.shape[0]-1), 0
             if self.maze[x, y+1] == 0:
                 break
         self.maze[x, y] = 2
 
     def _set_exit(self):
         while True:
-            x, y = random.randint(1, self.maze.shape[0]-1), self.maze.shape[1]-1
+            x, y = randint(1, self.maze.shape[0]-1), self.maze.shape[1]-1
             if self.maze[x, y-1] == 0:
                 break
         self.maze[x, y] = 3
@@ -56,14 +55,14 @@ class Maze:
 class RandomMaze:
     # TODO: Finish random mazes
     def make_maze(self, n_x, n_y):
-        maze_arr = np.zeros([n_x, n_y], dtype=int)
+        maze_arr = zeros([n_x, n_y], dtype=int)
         for i in range(n_x):
             for j in range(n_y):
                 maze_arr[i, j] = self._fill_square()
         return maze_arr
 
     def _fill_square(self, percentage=50):
-        random_ = random.randint(0, 101)
+        random_ = randint(0, 101)
         if random_ > percentage:
             return 1
         return 0
@@ -74,8 +73,8 @@ class PrimMaze:
             self._loop = True
             self.walls = []
             self.passage = []
-            self.maze = np.full([n_x+1, n_y+1], 1, dtype=int)
-            x, y = random.randint(1, n_x-1), 1
+            self.maze = full([n_x+1, n_y+1], 1, dtype=int)
+            x, y = randint(1, n_x-1), 1
             self.passage.append([x, y])
             self.maze[x, y] = 0
             self._add_walls(x, y)
@@ -97,7 +96,7 @@ class PrimMaze:
         return self.maze
 
     def _add_walls(self, x, y):
-        self.ghost_maze = np.zeros(
+        self.ghost_maze = zeros(
             [self.maze.shape[0]+2, self.maze.shape[1]+2],
             dtype=int
         )
@@ -119,7 +118,7 @@ class PrimMaze:
             iterations += 1
             if iterations > high*2:
                 return None, None
-            rand_wall = random.randint(0, high - 1)
+            rand_wall = randint(0, high - 1)
 
             x_wall, y_wall = self.walls[rand_wall]
             x, y = self._find_nearest_passage([x_wall, y_wall])
@@ -153,7 +152,7 @@ class PrimMaze:
         return self.passage[index]
 
     def _prepare_final(self):
-        maze_temp = np.ones([self.maze.shape[0]+1, self.maze.shape[1]+1], dtype=int)
+        maze_temp = ones([self.maze.shape[0]+1, self.maze.shape[1]+1], dtype=int)
         maze_temp[1:-1, 1:-1] = self.maze[:-1, :-1]
         self.maze = maze_temp
 
@@ -163,7 +162,7 @@ class KruskalMaze:
         self.num_cells_last = -1
         len_x = (n_x+4)
         len_y = (n_y+4)
-        self.maze = np.full([len_x, len_y], 1, dtype=int)
+        self.maze = full([len_x, len_y], 1, dtype=int)
         self._make_walls()
         self._make_sets()
         self._repeat_iterations = 0
@@ -175,8 +174,8 @@ class KruskalMaze:
         return self.maze
 
     def _make_walls(self):
-        self.walls = np.arange(0, self.maze.size, dtype=int)
-        self.walls = np.reshape(self.walls, self.maze.shape)
+        self.walls = arange(0, self.maze.size, dtype=int)
+        self.walls = reshape(self.walls, self.maze.shape)
         for i in range(self.maze.shape[0]):
             if (i%2 == 1):
                 self.walls[i, :] = -1
@@ -195,8 +194,8 @@ class KruskalMaze:
 
     def _pick_wall(self):
         while True:
-            i = random.randint(2, self.walls.shape[0]-3)
-            j = random.randint(2, self.walls.shape[1]-3)
+            i = randint(2, self.walls.shape[0]-3)
+            j = randint(2, self.walls.shape[1]-3)
             wall_id = self.walls[i, j]
             if ((self.walls[i+1, j] == -1) and (self.walls[i-1, j] == -1)
                 and (self.walls[i, j+1] == -1) and (self.walls[i, j-1] == -1)):
@@ -218,7 +217,7 @@ class KruskalMaze:
             set_up = self.sets[set_id_up]
             set_down = self.sets[set_id_down]
 
-            rand_flt = random.random()
+            rand_flt = random()
             if rand_flt <= 0.5:
                 sym_diff = set_left^set_right
                 if ((set_id_left in sym_diff) and (set_id_right in sym_diff)):
@@ -247,7 +246,7 @@ class KruskalMaze:
         return None, None
 
     def _check_final(self):
-        flat = np.ravel(self.maze)
+        flat = ravel(self.maze)
         num_cells = len(flat[flat==0])
         if num_cells == self.num_cells_last:
             self._repeat_iterations += 1
@@ -280,7 +279,7 @@ class KruskalMaze:
                         self.sets[self.walls[i, j-2]].update(self.sets[self.walls[i, j]])
 
     def _prepare_final(self):
-        maze_temp = np.ones([self.maze.shape[0]-2, self.maze.shape[1]-2], dtype=int)
+        maze_temp = ones([self.maze.shape[0]-2, self.maze.shape[1]-2], dtype=int)
         maze_temp[1:-1, 1:-1] = self.maze[2:-2, 2:-2]
         self.maze = maze_temp
 
