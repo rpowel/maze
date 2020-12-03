@@ -1345,7 +1345,7 @@
       <rect>
        <x>0</x>
        <y>20</y>
-       <width>151</width>
+       <width>144</width>
        <height>62</height>
       </rect>
      </property>
@@ -1389,11 +1389,20 @@
         </item>
         <item>
          <widget class="QSpinBox" name="seedValue">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>25</height>
+           </size>
           </property>
           <property name="buttonSymbols">
            <enum>QAbstractSpinBox::NoButtons</enum>

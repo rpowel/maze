@@ -7,6 +7,7 @@ Created on Thu Nov 19 06:58:24 2020.
 """
 import sys
 from PyQt5 import QtWidgets
+from numpy import zeros
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.colors import LinearSegmentedColormap
@@ -33,6 +34,7 @@ class App():
             ]
 
         self.ui.drawButton.clicked.connect(self._drawMaze)
+        self.ui.seedCheckBox.stateChanged.connect(self._enableSeed)
 
         self._exit()
 
@@ -63,6 +65,13 @@ class App():
         maze = Maze().make_maze(nX, nY, maze_type=choice)
         return maze
 
+    def _enableSeed(self):
+        state = self.ui.seedValue.isEnabled()
+        if state:
+            self.ui.seedValue.setEnabled(False)
+        else:
+            self.ui.seedValue.setEnabled(True)
+
     def _getSeed(self):
         if self.ui.seedCheckBox.isChecked():
             seed_ = self.ui.seedValue.value()
@@ -70,6 +79,18 @@ class App():
             seed_ = randrange(999999999)
         seed(seed_)
         return seed_
+
+    def _drawMask(self, maze):
+        enterMask = (maze == 2)
+        exitMask = (maze == 3)
+        enterArray = zeros([enterMask.shape[0]+2, enterMask.shape[1]+2], dtype=int)
+        exitArray = zeros(exitMask.shape, dtype=int)
+        enterArray[1:-1, 1:-1][enterMask] = 1
+        exitArray[exitMask] = 1
+
+        
+
+        self._ax.contourf(enterArray, 1, hatches=['', '//'], alpha=0.5, origin=None)
 
     def _drawMaze(self):
         self.ui.frame_2.setEnabled(False)
@@ -88,7 +109,8 @@ class App():
         self.ui.verticalLayout_3.addWidget(self.canvas)
         self._ax = self.canvas.figure.subplots()
         self._ax.pcolormesh(maze, edgecolor=None, cmap=COLORMAP)
-        self._ax.axis('off')
+        self._drawMask(maze)
+#        self._ax.axis('off')
         self._ax.set_facecolor('#000000')
         self.ui.drawButton.setText("Draw")
         self.ui.frame_2.setEnabled(True)
@@ -96,4 +118,3 @@ class App():
 
 if __name__ == '__main__':
     App()
-
