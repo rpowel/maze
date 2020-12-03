@@ -10,9 +10,12 @@ from PyQt5 import QtWidgets
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.colors import LinearSegmentedColormap
+from random import randrange
+from random import seed
 
 from mazes import Maze
 from mazegui import Ui_mazeMenu
+
 
 COLORMAP = LinearSegmentedColormap.from_list(
     'maze', [(1, 1, 1), (0, 0, 0), (0, 1, 0), (1, 0, 0)], N = 4)
@@ -60,10 +63,19 @@ class App():
         maze = Maze().make_maze(nX, nY, maze_type=choice)
         return maze
 
+    def _getSeed(self):
+        if self.ui.seedCheckBox.isChecked():
+            seed_ = self.ui.seedValue.value()
+        else:
+            seed_ = randrange(999999999)
+        seed(seed_)
+        return seed_
+
     def _drawMaze(self):
-        # TODO: make colormap black/white for walls/cells
         self.ui.frame_2.setEnabled(False)
         self.ui.drawButton.setText("Loading...")
+        seed_ = self._getSeed()
+        self.ui.seedValue.setValue(seed_)
         self.app.processEvents()
         maze = self._makeMaze()
         self.ui.verticalLayout_3.takeAt(0)
