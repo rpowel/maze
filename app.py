@@ -14,12 +14,8 @@ from matplotlib.colors import LinearSegmentedColormap
 from random import randrange
 from random import seed
 
-try:
-    from amazingmazes.mazes import Maze
-    from amazingmazes.mazegui import Ui_mazeMenu
-except ModuleNotFoundError:  # Catch if 'amazingmazes' is not in path
-    from mazes import Maze
-    from mazegui import Ui_mazeMenu
+from mazes import Maze
+from mazegui import Ui_mazeMenu
 
 
 COLORMAP = LinearSegmentedColormap.from_list(
