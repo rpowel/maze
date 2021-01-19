@@ -559,6 +559,9 @@ class Ui_mazeMenu(object):
         self.kuzatsButton = QtWidgets.QRadioButton(self.layoutWidget2)
         self.kuzatsButton.setObjectName("kuzatsButton")
         self.verticalLayout_2.addWidget(self.kuzatsButton)
+        self.recursiveButton = QtWidgets.QRadioButton(self.layoutWidget2)
+        self.recursiveButton.setObjectName("recursiveButton")
+        self.verticalLayout_2.addWidget(self.recursiveButton)
 
         self.retranslateUi(mazeMenu)
         QtCore.QMetaObject.connectSlotsByName(mazeMenu)
@@ -584,6 +587,7 @@ class Ui_mazeMenu(object):
         self.randomButton.setText(_translate("mazeMenu", "Random"))
         self.primButton.setText(_translate("mazeMenu", "Prim"))
         self.kuzatsButton.setText(_translate("mazeMenu", "Kruskal"))
+        self.recursiveButton.setText(_translate("mazeMenu", "Recursive"))
 
 
 if __name__ == "__main__":

@@ -12,17 +12,30 @@ from random import randint, random
 
 class Maze:
     def make_maze(self, n_x, n_y, maze_type='Prim'):
+        maze_generator = self.gen_maze(n_x, n_y, maze_type=maze_type)
+        maze_temp = None
+        while True:
+            try:
+                maze_temp = maze_generator.__next__()
+            except StopIteration:
+                break
+        self.maze = maze_temp
+#        self.maze = self._prepare_final()
+#        self._set_entrance()
+#        self._set_exit()
+        return self.maze
+
+    def gen_maze(self, n_x, n_y, maze_type='Prim'):
         if maze_type == 'Random':
             self.maze = RandomMaze().make_maze(n_x, n_y)
         elif maze_type == 'Prim':
             self.maze = PrimMaze().make_maze(n_x, n_y)
         elif maze_type == 'Kruskal':
             self.maze = KruskalMaze().make_maze(n_x, n_y)
+        elif maze_type == 'Recursive':
+            self.maze = RecursiveDivision().make_maze(n_x, n_y)
         else:
             self.maze = None
-
-        self._set_entrance()
-        self._set_exit()
 
         return self.maze
 
@@ -45,6 +58,11 @@ class Maze:
             if self.maze[x, y-1] == 0:
                 break
         self.maze[x, y] = 3
+
+    def _prepare_final(self):
+        maze_temp = ones([self.maze.shape[0]+1, self.maze.shape[1]+1], dtype=int)
+        maze_temp[1:-1, 1:-1] = self.maze[:-1, :-1]
+        return maze_temp
 
     def _check_percolation(self, maze):
         # TODO Check percolation of random maze
@@ -69,31 +87,30 @@ class RandomMaze:
 
 class PrimMaze:
     def make_maze(self, n_x, n_y):
-        while True:
-            self._loop = True
-            self.walls = []
-            self.passage = []
-            self.maze = full([n_x+1, n_y+1], 1, dtype=int)
-            x, y = randint(1, n_x-1), 1
-            self.passage.append([x, y])
-            self.maze[x, y] = 0
-            self._add_walls(x, y)
+        self._loop = True
+        self.walls = []
+        self.passage = []
+        self.maze = full([n_x+1, n_y+1], 1, dtype=int)
+        x, y = randint(1, n_x-1), 1
+        self.passage.append([x, y])
+        self.maze[x, y] = 0
+        self._add_walls(x, y)
 
-            for i in range(n_x*n_y):
-                pos, wall = self._pick_wall()
-                if pos is None:
-                    break
-                x, y = pos
-                self.maze[x, y] = 0
-                self.walls.pop(wall)
-                self._add_walls(x, y)
-                self.passage.append([x, y])
+        for i in range(n_x*n_y*10):
+            pos, wall = self._pick_wall()
+            if pos is None:
+                break
+            x, y = pos
+            self.maze[x, y] = 0
+            self.walls.pop(wall)
+            self._add_walls(x, y)
+            self.passage.append([x, y])
 
             if len(self.passage) > (n_x*n_y/4):
                 break  # prevents weird mazes with only a few squares
 
-        self._prepare_final()
-        return self.maze
+            #temp_maze = self._prepare_final()
+            yield self.maze
 
     def _add_walls(self, x, y):
         self.ghost_maze = zeros(
@@ -154,7 +171,7 @@ class PrimMaze:
     def _prepare_final(self):
         maze_temp = ones([self.maze.shape[0]+1, self.maze.shape[1]+1], dtype=int)
         maze_temp[1:-1, 1:-1] = self.maze[:-1, :-1]
-        self.maze = maze_temp
+        return maze_temp
 
 
 class KruskalMaze:
@@ -247,7 +264,7 @@ class KruskalMaze:
 
     def _check_final(self):
         flat = ravel(self.maze)
-        num_cells = len(flat[flat==0])
+        num_cells = len(flat[flat == 0])
         if num_cells == self.num_cells_last:
             self._repeat_iterations += 1
         if self._repeat_iterations > 20:
@@ -282,6 +299,48 @@ class KruskalMaze:
         maze_temp = ones([self.maze.shape[0]-2, self.maze.shape[1]-2], dtype=int)
         maze_temp[1:-1, 1:-1] = self.maze[2:-2, 2:-2]
         self.maze = maze_temp
+
+
+class RecursiveDivision:
+    def make_maze(self, n_x, n_y):
+        self.maze = full([n_x, n_y], 0, dtype=int)
+        self.space = self.maze
+        self.maze = self._divide_space(self.space)
+        self.maze = self._prep_final()
+        return self.maze
+
+    def _divide_space(self, space):
+        if random() > 0.5 and (space.shape[1] > 3):
+            wall = randint(1, space.shape[1]-2)
+            space[:, wall] = 1
+            door = randint(0, space.shape[0]-1)
+            space[door, wall] = 0
+            newSpace1 = space[:, :wall]
+            newSpace2 = space[:, wall+1:]
+        elif space.shape[0] > 3:
+            wall = randint(1, space.shape[0]-2)
+            space[wall, :] = 1
+            door = randint(0, space.shape[1]-1)
+            space[wall, door] = 0
+            newSpace1 = space[:wall, :]
+            newSpace2 = space[wall+1:, :]
+        elif space.shape[1] > 3:
+            wall = randint(1, space.shape[1]-2)
+            space[:, wall] = 1
+            door = randint(0, space.shape[0]-1)
+            space[door, wall] = 0
+            newSpace1 = space[:, :wall]
+            newSpace2 = space[:, wall+1:]
+        else:
+            return space
+        newSpace1 = self._divide_space(newSpace1)
+        newSpace2 = self._divide_space(newSpace2)
+        return space
+
+    def _prep_final(maze):
+        final = full([maze.shape[0]+2, maze.shape[1]+2], 1, dtype=int)
+        final[1:-1, 1:-1] = maze
+        return final
 
 
 if __name__ == "__main__":

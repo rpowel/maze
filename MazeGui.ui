@@ -1621,6 +1621,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QRadioButton" name="recursiveButton">
+        <property name="text">
+         <string>Recursive</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </widget>

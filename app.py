@@ -30,7 +30,8 @@ class App():
         self._mazeSelectButtons = [
             self.ui.randomButton,
             self.ui.primButton,
-            self.ui.kuzatsButton
+            self.ui.kuzatsButton,
+            self.ui.recursiveButton,
             ]
 
         self.ui.drawButton.clicked.connect(self._drawMaze)
