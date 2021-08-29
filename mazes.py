@@ -22,20 +22,6 @@ class Maze:
         self.maze = None
 
     def make_maze(self, n_x, n_y, maze_type='Prim'):
-        maze_temp = None
-        maze_generator = self.gen_maze(n_x, n_y, maze_type=maze_type)
-        while True:
-            try:
-                maze_temp = maze_generator.__next__()
-            except StopIteration:
-                break
-        self.maze = maze_temp
-        #        self.maze = self._prepare_final()
-        #        self._set_entrance()
-        #        self._set_exit()
-        return self.maze
-
-    def gen_maze(self, n_x, n_y, maze_type='Prim'):
         if maze_type == 'Random':
             self.maze = RandomMaze().make_maze(n_x, n_y)
         elif maze_type == 'Prim':
@@ -46,6 +32,8 @@ class Maze:
             self.maze = RecursiveDivision().make_maze(n_x, n_y)
         else:
             self.maze = None
+        self._set_entrance()
+        self._set_exit()
 
         return self.maze
 
@@ -108,11 +96,10 @@ class PrimMaze:
             self._add_walls(x, y)
             self.passage.append([x, y])
 
-            if len(self.passage) > (n_x * n_y / 4):
+            if len(self.passage) > (n_x * n_y):
                 break  # prevents weird mazes with only a few squares
-
-            # temp_maze = self._prepare_final()
-            yield self.maze
+        self._prepare_final()
+        return self.maze
 
     def _add_walls(self, x, y):
         self.ghost_maze = zeros(
@@ -157,7 +144,7 @@ class PrimMaze:
                     next_right_over = self.maze[x_wall + 1, y_wall - diff_y]
                     next_left_over = self.maze[x_wall - 1, y_wall - diff_y]
 
-            except Exception:  # TODO: Make more specific exception
+            except IndexError as e:  # TODO: Make more specific exception
                 continue
 
             if not (next_over and next_right and next_left
@@ -173,7 +160,7 @@ class PrimMaze:
     def _prepare_final(self):
         maze_temp = ones([self.maze.shape[0] + 1, self.maze.shape[1] + 1], dtype=int)
         maze_temp[1:-1, 1:-1] = self.maze[:-1, :-1]
-        return maze_temp
+        self.maze = maze_temp
 
 
 class KruskalMaze:
@@ -326,7 +313,6 @@ class RecursiveDivision:
         self.maze = full([n_x, n_y], 0, dtype=int)
         self.space = self.maze
         self.maze = self._divide_space(self.space)
-        self.maze = self._prep_final(self.maze)
         return self.maze
 
     def _divide_space(self, space):
