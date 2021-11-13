@@ -6,6 +6,9 @@ Created on Wed Nov 11 10:44:44 2020.
 @author: powel
 """
 from random import randint
+
+import numpy as np
+
 from mazes import RandomMaze, PrimMaze, KruskalMaze, RecursiveDivisionMaze
 
 
@@ -13,7 +16,7 @@ class Maze:
     def __init__(self):
         self.maze = None
 
-    def make_maze(self, n_x, n_y, maze_type='Prim'):
+    def make_maze(self, n_x: int, n_y: int, maze_type: str = 'Prim') -> np.ndarray:
         if maze_type == 'Random':
             self.maze = RandomMaze().make_maze(n_x, n_y)
         elif maze_type == 'Prim':
