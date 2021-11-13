@@ -42,7 +42,8 @@ newMaze = Maze().make_maze(10, 10, maze_type='Prim')
 #]
 # '0' is a passage
 # '1' is a wall
-# '2' is the entrance, and '3' is the exit.
+# '2' is the entrance
+# '3' is the exit.
 ```
 
 ### Known Issues
