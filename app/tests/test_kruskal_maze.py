@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from mazes.kruskal_maze import KruskalMaze
+from mazes import KruskalMaze
 
 
 def test_make_maze():
@@ -24,6 +24,4 @@ def test_make_maze():
         ],
         dtype=int,
     )
-    print()
-    print(repr(result))
     assert np.array_equal(result, correct)

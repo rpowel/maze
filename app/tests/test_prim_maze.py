@@ -1,5 +1,5 @@
 import random
-from mazes.prim_maze import PrimMaze
+from mazes import PrimMaze
 import numpy as np
 
 

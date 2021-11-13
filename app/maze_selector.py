@@ -5,11 +5,13 @@ Created on Wed Nov 11 10:44:44 2020.
 
 @author: powel
 """
+import random
 from random import randint
 
 import numpy as np
 
-from mazes import RandomMaze, PrimMaze, KruskalMaze, RecursiveDivisionMaze
+from mazes import RandomMaze, PrimMaze, KruskalMaze, RecursiveDivisionMaze, MazeBase
+from percolation import check_percolation
 
 
 class Maze:
@@ -18,36 +20,51 @@ class Maze:
 
     def make_maze(self, n_x: int, n_y: int, maze_type: str = 'Prim') -> np.ndarray:
         if maze_type == 'Random':
-            self.maze = RandomMaze().make_maze(n_x, n_y)
+            maze_class = RandomMaze
         elif maze_type == 'Prim':
-            self.maze = PrimMaze().make_maze(n_x, n_y)
+            maze_class = PrimMaze
         elif maze_type == 'Kruskal':
-            self.maze = KruskalMaze().make_maze(n_x, n_y)
+            maze_class = KruskalMaze
         elif maze_type == 'Recursive':
-            self.maze = RecursiveDivisionMaze().make_maze(n_x, n_y)
+            maze_class = RecursiveDivisionMaze
         else:
-            self.maze = None
-        self._set_entrance()
-        self._set_exit()
+            raise ValueError("Invalid maze_type")
 
-        return self.maze
+        maze = self._make_check_maze(n_x, n_y, maze_class)
 
-    def _set_entrance(self):
+        return maze
+
+    def _make_check_maze(self, n_x: int, n_y: int, maze_class: MazeBase) -> np.ndarray:
+        maze = maze_class().make_maze(n_x, n_y)
+        maze = self._set_entrance(maze)
+        maze = self._set_exit(maze)
+        while not check_percolation(maze):
+            maze = maze_class().make_maze(n_x, n_y)
+            maze = self._set_entrance(maze)
+            maze = self._set_exit(maze)
+        return maze
+
+    @staticmethod
+    def _set_entrance(maze: np.ndarray) -> np.ndarray:
         while True:
-            x, y = randint(1, self.maze.shape[0] - 1), 0
-            if self.maze[x, y + 1] == 0:
+            x, y = randint(1, maze.shape[0] - 1), 0
+            if maze[x, y + 1] == 0:
                 break
-        self.maze[x, y] = 2
+        maze[x, y] = 2
+        return maze
 
-    def _set_exit(self):
+    @staticmethod
+    def _set_exit(maze: np.ndarray) -> np.ndarray:
         while True:
-            x, y = randint(1, self.maze.shape[0] - 1), self.maze.shape[1] - 1
-            if self.maze[x, y - 1] == 0:
+            x, y = randint(1, maze.shape[0] - 1), maze.shape[1] - 1
+            if maze[x, y - 1] == 0:
                 break
-        self.maze[x, y] = 3
+        maze[x, y] = 3
+        return maze
 
 
 if __name__ == "__main__":
-    N = 8
-    maze = Maze().make_maze(N, N, maze_type='Prim')
-    print(maze)
+    random.seed(1)
+    N = 10
+    maze = Maze().make_maze(N, N, maze_type='Recursive')
+    print(maze.__repr__())

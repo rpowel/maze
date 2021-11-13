@@ -21,11 +21,11 @@ class RecursiveDivisionMaze(MazeBase):
     def _divide_space(self, space: np.ndarray, prev_door_index: int = 0) -> np.ndarray:
         """Performe recursive division of maze and create walls and doors."""
         # TODO: check for walls right next to new door placement
-        if random() > 0.5 and (space.shape[1] > 4):
+        if random() > 0.5 and (space.shape[1] > 5):
             direction = 'x'
-        elif space.shape[0] > 4:
+        elif space.shape[0] > 5:
             direction = 'y'
-        elif space.shape[1] > 4:
+        elif space.shape[1] > 5:
             direction = 'x'
         else:
             return space
@@ -86,8 +86,13 @@ class RecursiveDivisionMaze(MazeBase):
             door_dir = 1
         # Keep wall from block door
         wall_index = prev_door_index
+        max_iter = 50
+        iteration = 0
         while wall_index == prev_door_index:
             wall_index = randint(2, space.shape[wall_dir] - 3)
+            iteration += 1
+            if iteration >= max_iter:
+                break
 
         door_index = randint(0, space.shape[door_dir] - 1)
 
