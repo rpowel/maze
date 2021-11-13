@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from app.mazes.kruskal_maze import KruskalMaze
+from mazes.kruskal_maze import KruskalMaze
 
 
 def test_make_maze():
