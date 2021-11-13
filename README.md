@@ -3,9 +3,9 @@ Create unique mazes either in GUI or directly into a numpy array!
 
 ## Installation
 ```shell
-$ git clone https://github.com/rpowel/maze
-$ cd maze
-$ pip install -r requirements.txt
+git clone https://github.com/rpowel/maze
+cd maze
+pip install -r requirements.txt
 ```
 
 ## Usage
@@ -59,7 +59,7 @@ If one tries to click the draw button in the gui in too rapid of succession, the
 ## Testing
 ```shell
 # Install pytest
-$ pip install pytest
+pip install pytest
 # from maze or maze/app directory
-$ pytest
+pytest
 ```
