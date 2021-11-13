@@ -14,7 +14,7 @@ from matplotlib.colors import LinearSegmentedColormap
 from random import randrange
 from random import seed
 
-from mazes.maze_selector import Maze
+from maze_selector import Maze
 from ui.mazegui import Ui_mazeMenu
 
 

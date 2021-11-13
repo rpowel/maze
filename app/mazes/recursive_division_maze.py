@@ -5,7 +5,7 @@ from numpy import full
 from mazes.base import MazeBase
 
 
-class RecursiveDivision(MazeBase):
+class RecursiveDivisionMaze(MazeBase):
     def __init__(self):
         self.maze = None
         self.space = None
