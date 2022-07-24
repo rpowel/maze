@@ -1,10 +1,12 @@
 """Base class for maze generator."""
 import abc
+
 import numpy as np
 
 
 class MazeBase(abc.ABC):
     """Abstract base for maze generator."""
+
     @staticmethod
     @abc.abstractmethod
     def _prepare_final(maze: np.ndarray) -> np.ndarray:

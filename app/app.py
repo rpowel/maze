@@ -6,20 +6,21 @@ Created on Thu Nov 19 06:58:24 2020.
 @author: powel
 """
 import sys
-from PyQt5 import QtWidgets
-from numpy import where
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.colors import LinearSegmentedColormap
 from random import randrange
 from random import seed
+
+from PyQt5 import QtWidgets
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.figure import Figure
+from numpy import where
 
 from maze_selector import Maze
 from ui.mazegui import Ui_mazeMenu
 
-
 COLORMAP = LinearSegmentedColormap.from_list(
-    'maze', [(1, 1, 1), (0, 0, 0), (0, 1, 0), (1, 0, 0)], N=4)
+    "maze", [(1, 1, 1), (0, 0, 0), (0, 1, 0), (1, 0, 0)], N=4
+)
 
 
 class App:
@@ -32,7 +33,7 @@ class App:
             self.ui.primButton,
             self.ui.kuzatsButton,
             self.ui.recursiveButton,
-            ]
+        ]
 
         self.ui.drawButton.clicked.connect(self._draw_maze)
         self.ui.seedCheckBox.stateChanged.connect(self._enable_seed)
@@ -91,18 +92,18 @@ class App:
         diff = 0.99
 
         self._ax.fill(
-            [i, i+diff, i+diff, i],
-            [j, j, j+diff, j+diff],
+            [i, i + diff, i + diff, i],
+            [j, j, j + diff, j + diff],
             fill=False,
-            hatch='////',
-            )
+            hatch="////",
+        )
 
         self._ax.fill(
-            [k, k+diff, k+diff, k],
-            [m, m, m+diff, m+diff],
+            [k, k + diff, k + diff, k],
+            [m, m, m + diff, m + diff],
             fill=False,
-            hatch='\\\\\\\\',
-            )
+            hatch="\\\\\\\\",
+        )
 
     def _draw_maze(self):
         self.ui.frame_2.setEnabled(False)
@@ -112,21 +113,16 @@ class App:
         self.app.processEvents()
         maze = self._make_maze()
         self.ui.verticalLayout_3.takeAt(0)
-        self.canvas = FigureCanvas(
-            Figure(
-                frameon=False,
-                tight_layout=True
-                )
-            )
+        self.canvas = FigureCanvas(Figure(frameon=False, tight_layout=True))
         self.ui.verticalLayout_3.addWidget(self.canvas)
         self._ax = self.canvas.figure.subplots()
         self._ax.pcolormesh(maze, edgecolor=None, cmap=COLORMAP)
         self._draw_mask(maze)
-        self._ax.axis('off')
-        self._ax.set_facecolor('#000000')
+        self._ax.axis("off")
+        self._ax.set_facecolor("#000000")
         self.ui.drawButton.setText("Draw")
         self.ui.frame_2.setEnabled(True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     App()

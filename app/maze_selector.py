@@ -18,14 +18,14 @@ class Maze:
     def __init__(self):
         self.maze = None
 
-    def make_maze(self, n_x: int, n_y: int, maze_type: str = 'Prim') -> np.ndarray:
-        if maze_type == 'Random':
+    def make_maze(self, n_x: int, n_y: int, maze_type: str = "Prim") -> np.ndarray:
+        if maze_type == "Random":
             maze_class = RandomMaze
-        elif maze_type == 'Prim':
+        elif maze_type == "Prim":
             maze_class = PrimMaze
-        elif maze_type == 'Kruskal':
+        elif maze_type == "Kruskal":
             maze_class = KruskalMaze
-        elif maze_type == 'Recursive':
+        elif maze_type == "Recursive":
             maze_class = RecursiveDivisionMaze
         else:
             raise ValueError("Invalid maze_type")
@@ -66,5 +66,5 @@ class Maze:
 if __name__ == "__main__":
     random.seed(1)
     N = 10
-    maze = Maze().make_maze(N, N, maze_type='Recursive')
+    maze = Maze().make_maze(N, N, maze_type="Recursive")
     print(maze.__repr__())
