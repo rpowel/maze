@@ -75,9 +75,9 @@ def _is_percolation(coords, ids, grid_x_dimension):
     """
     clusters_coordinates = []
     for idx in np.unique(ids):
-        clusters_coordinates.append([
-            coords[k] for k in range(len(ids)) if ids[k] == idx
-        ])
+        clusters_coordinates.append(
+            [coords[k] for k in range(len(ids)) if ids[k] == idx]
+        )
 
     # search for percolated cluster(s)
     for cluster in clusters_coordinates:

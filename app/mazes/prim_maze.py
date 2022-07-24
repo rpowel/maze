@@ -1,8 +1,8 @@
 import random
 
 import numpy as np
-
 from scipy.spatial import cKDTree
+
 from mazes.base import MazeBase
 
 
@@ -43,8 +43,7 @@ class PrimMaze(MazeBase):
 
     def _add_walls(self, x, y):
         ghost_maze = np.zeros(
-            [self.maze.shape[0] + 2, self.maze.shape[1] + 2],
-            dtype=int
+            [self.maze.shape[0] + 2, self.maze.shape[1] + 2], dtype=int
         )
         ghost_maze[1:-1, 1:-1] = self.maze
 
@@ -87,7 +86,13 @@ class PrimMaze(MazeBase):
             except IndexError as e:  # TODO: Make more specific exception
                 continue
 
-            if not (next_over and next_right and next_left and next_left_over and next_right_over):
+            if not (
+                next_over
+                and next_right
+                and next_left
+                and next_left_over
+                and next_right_over
+            ):
                 self.walls.pop(rand_wall)
             else:
                 return self.walls[rand_wall], rand_wall

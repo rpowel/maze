@@ -1,4 +1,5 @@
 import numpy as np
+
 from percolation import check_percolation
 
 

@@ -14,8 +14,8 @@ class KruskalMaze(MazeBase):
 
     def make_maze(self, n_x, n_y):
         self.num_cells_last = -1
-        len_x = (n_x + 4)
-        len_y = (n_y + 4)
+        len_x = n_x + 4
+        len_y = n_y + 4
         self.maze = full([len_x, len_y], 1, dtype=int)
         self._make_walls()
         self._make_sets()
@@ -51,10 +51,12 @@ class KruskalMaze(MazeBase):
             i = randint(2, self.walls.shape[0] - 3)
             j = randint(2, self.walls.shape[1] - 3)
             wall_id = self.walls[i, j]
-            if ((self.walls[i + 1, j] == -1)
-                    and (self.walls[i - 1, j] == -1)
-                    and (self.walls[i, j + 1] == -1)
-                    and (self.walls[i, j - 1] == -1)):
+            if (
+                (self.walls[i + 1, j] == -1)
+                and (self.walls[i - 1, j] == -1)
+                and (self.walls[i, j + 1] == -1)
+                and (self.walls[i, j - 1] == -1)
+            ):
                 continue
             if wall_id == -1:
                 return i, j

@@ -1,6 +1,8 @@
 import random
-from mazes import PrimMaze
+
 import numpy as np
+
+from mazes import PrimMaze
 
 
 def test_make_maze():

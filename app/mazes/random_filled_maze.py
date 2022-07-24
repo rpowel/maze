@@ -1,6 +1,7 @@
+from random import randint
+
 import numpy as np
 from numpy import zeros, full
-from random import randint
 
 from mazes.base import MazeBase
 
