@@ -1,6 +1,6 @@
 import numpy as np
 
-from percolation import check_percolation
+from common.percolation import check_percolation
 
 
 def test_percolation_check_true():

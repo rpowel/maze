@@ -5,36 +5,40 @@ Created on Wed Nov 11 10:44:44 2020.
 
 @author: powel
 """
-import random
 from random import randint
+from typing import Type
 
 import numpy as np
 
+from common.percolation import check_percolation
 from mazes import RandomMaze, PrimMaze, KruskalMaze, RecursiveDivisionMaze, MazeBase
-from percolation import check_percolation
+from .base import BaseProcessor
 
 
-class Maze:
-    def __init__(self):
-        self.maze = None
+class MazeSelectionProcessor(BaseProcessor):
+    def __init__(self, n_x: int, n_y: int, maze_type: str = "Prim") -> None:
+        super().__init__()
+        self.n_x = n_x
+        self.n_y = n_y
+        self.maze_type = maze_type
 
-    def make_maze(self, n_x: int, n_y: int, maze_type: str = "Prim") -> np.ndarray:
-        if maze_type == "Random":
+    def process(self) -> np.ndarray:
+        if self.maze_type == "Random":
             maze_class = RandomMaze
-        elif maze_type == "Prim":
+        elif self.maze_type == "Prim":
             maze_class = PrimMaze
-        elif maze_type == "Kruskal":
+        elif self.maze_type == "Kruskal":
             maze_class = KruskalMaze
-        elif maze_type == "Recursive":
+        elif self.maze_type == "Recursive":
             maze_class = RecursiveDivisionMaze
         else:
             raise ValueError("Invalid maze_type")
 
-        maze = self._make_check_maze(n_x, n_y, maze_class)
+        maze = self._make_check_maze(self.n_x, self.n_y, maze_class)
 
         return maze
 
-    def _make_check_maze(self, n_x: int, n_y: int, maze_class: MazeBase) -> np.ndarray:
+    def _make_check_maze(self, n_x: int, n_y: int, maze_class: Type[MazeBase]) -> np.ndarray:
         maze = maze_class().make_maze(n_x, n_y)
         maze = self._set_entrance(maze)
         maze = self._set_exit(maze)
@@ -61,10 +65,3 @@ class Maze:
                 break
         maze[x, y] = 3
         return maze
-
-
-if __name__ == "__main__":
-    random.seed(1)
-    N = 10
-    maze = Maze().make_maze(N, N, maze_type="Recursive")
-    print(maze.__repr__())
