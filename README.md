@@ -15,16 +15,15 @@ Running app.py (after installing requirements) will open a window where you can 
 the size and type of maze you would like to use, as well as a seed setting if you would
 like to specify the maze seed.
 
-![Gui Screenshot](images/gui_screenshot.png)
-
 ### CLI Based
 
 Maze generation returns a numpy array of 0's and 1's.
 
 ```python
 # n_x and n_y are the number of squares in the x and y direction respectively
-from maze_selector import Maze
-newMaze = Maze().make_maze(10, 10, maze_type='Prim')
+from processors.maze_selection_processor import MazeSelectionProcessor
+
+newMaze = MazeSelectionProcessor(10, 10, maze_type='Prim').process()
 # will return a numpy array like:
 # [
 #     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -39,7 +38,7 @@ newMaze = Maze().make_maze(10, 10, maze_type='Prim')
 #     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 #     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1],
 #     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#]
+# ]
 # '0' is a passage
 # '1' is a wall
 # '2' is the entrance
