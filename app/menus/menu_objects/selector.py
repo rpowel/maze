@@ -1,0 +1,62 @@
+from typing import List, Tuple
+
+import pygame
+
+from common.colors import Colors
+from .base import BaseMenuObject
+from .button import Button
+
+
+class Selector(BaseMenuObject):
+    def __init__(
+        self,
+        x_rel_pos: int,
+        y_rel_pos: int,
+        options: List[str],
+    ) -> None:
+        super().__init__()
+
+        self.options = options
+        self.current_index = 0
+        self.max_index = len(options) - 1
+        self.current_value = self.options[self.current_index]
+
+        self.font = pygame.font.SysFont("Calibri", 20)
+        x, y = self._scale_abs_pos(x_rel_pos, y_rel_pos)
+        self.rect = pygame.Rect(x, y, 150, 40)
+        self.rect.center = (x, y)
+
+        left_img = pygame.image.load("images/menu-left.png").convert_alpha()
+        self.left_button = Button(x_rel_pos - 0.15, y_rel_pos, left_img)
+
+        right_img = pygame.image.load("images/menu-right.png").convert_alpha()
+        self.right_button = Button(x_rel_pos + 0.15, y_rel_pos, right_img)
+
+    def draw(self, surface: pygame.Surface, event_list: List[pygame.event.Event]) -> Tuple[bool, str]:
+        change = False
+        if self.left_button.draw(surface, event_list):
+            self._decrease_index()
+            change = True
+        if self.right_button.draw(surface, event_list):
+            self._increase_index()
+            change = True
+
+        # pygame.draw.rect(surface, Colors.TRANSPARENT, self.rect, 0)
+        msg = self.font.render(self.current_value, 1, Colors.WHITE)
+        surface.blit(msg, msg.get_rect(center=self.rect.center))
+
+        return change, self.current_value
+
+    def _increase_index(self):
+        if self.current_index == self.max_index:
+            self.current_index = 0
+        else:
+            self.current_index += 1
+        self.current_value = self.options[self.current_index]
+
+    def _decrease_index(self):
+        if self.current_index == 0:
+            self.current_index = self.max_index
+        else:
+            self.current_index -= 1
+        self.current_value = self.options[self.current_index]

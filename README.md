@@ -12,8 +12,10 @@ pip install -r requirements.txt
 
 ### Gui Based
 Running app.py (after installing requirements) will open a window where you can select
-the size and type of maze you would like to use, as well as a seed setting if you would
-like to specify the maze seed.
+the size and type of maze you would like to use.
+
+<img src="images/main_menu.png" alt="main menu" width="300"/>
+<img src="images/maze_screen.png" alt="main menu" width="300"/>
 
 ### CLI Based
 
