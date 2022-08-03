@@ -11,10 +11,10 @@ class MainMenu(BaseMenu):
         super().__init__()
         self.window = window
 
-        start_img = pygame.image.load("images/playbuttonpdn.png").convert_alpha()
+        start_img = pygame.image.load("images/play.png").convert_alpha()
         self.start_button = Button(0.25, 0.9, start_img)
 
-        options_img = pygame.image.load("images/info.png").convert_alpha()
+        options_img = pygame.image.load("images/menu.png").convert_alpha()
         self.option_button = Button(0.5, 0.9, options_img)
 
         exit_img = pygame.image.load("images/exit.png")

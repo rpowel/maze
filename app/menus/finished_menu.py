@@ -11,7 +11,7 @@ class FinishedMenu(BaseMenu):
         super().__init__()
         self.window = window
 
-        back_img = pygame.image.load("images/leftarrow.png").convert_alpha()
+        back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
         exit_img = pygame.image.load("images/exit.png")
