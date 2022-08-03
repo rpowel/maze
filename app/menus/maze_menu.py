@@ -22,7 +22,7 @@ class MazeMenu(BaseMenu):
 
     def init_maze(self) -> None:
         type_ = self._config.get("maze", "TYPE")
-        grid_size = self._config.get("maze", "SIZE")
+        grid_size = self._config.get("maze", "SIZE").lower()
         self._logger.info(f"Initializing maze. Type: {type_}, Size: {grid_size}")
 
         if grid_size == "small":
