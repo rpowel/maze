@@ -16,21 +16,29 @@ class Button(BaseMenuObject):
         self.image = self._scale_image(image, 0.15)
         self.rect = self.image.get_rect()
         self.rect.center = self._scale_abs_pos(x_rel_pos, y_rel_pos)
-        self.clicked = False
+        self.pressed = False
 
     def draw(
         self, surface: pygame.Surface, event_list: List[pygame.event.Event]
     ) -> bool:
         action = False
-        pos = pygame.mouse.get_pos()
-        if self.rect.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1 and self.clicked is False:
-                self.clicked = True
-                action = True
-
-        if pygame.mouse.get_pressed()[0] == 0:
-            self.clicked = False
+        if self._check_mouse_pos():
+            for event in event_list:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.pressed = True
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if self.pressed:
+                        action = True
+                        self.pressed = False
+        else:
+            self.pressed = False
 
         surface.blit(self.image, (self.rect.x, self.rect.y))
 
         return action
+
+    def _check_mouse_pos(self) -> bool:
+        pos = pygame.mouse.get_pos()
+        if self.rect.collidepoint(pos):
+            return True
+        return False
