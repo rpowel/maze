@@ -17,7 +17,7 @@ class MazeMenu(BaseMenu):
         self.square_size: int = None
         self.num_active: int = 0
 
-        back_img = pygame.image.load("images/leftarrow.png").convert_alpha()
+        back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
     def init_maze(self) -> None:
