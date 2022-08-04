@@ -2,7 +2,6 @@ from typing import Sequence, List, Tuple, Callable
 import numpy as np
 import pygame
 
-from common.colors import Colors
 from processors.maze_selection_processor import MazeSelectionProcessor
 from .base import BaseMenu
 from .menu_objects import Button, MazeSquare
@@ -16,26 +15,20 @@ class MazeMenu(BaseMenu):
         self.maze_buttons: Sequence[MazeSquare] = None
         self.square_size: int = None
         self.num_active: int = 0
+        self.buffer = 10  # 10px
 
         back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
     def init_maze(self) -> None:
-        type_ = self._config.get("maze", "TYPE")
-        grid_size = self._config.get("maze", "SIZE").lower()
+        type_ = self._config.get("maze", "type").lower()
+        grid_size = int(self._config.get("maze", "size"))
         self._logger.info(f"Initializing maze. Type: {type_}, Size: {grid_size}")
 
-        if grid_size == "small":
-            n = 20
-        elif grid_size == "medium":
-            n = 35
-        elif grid_size == "large":
-            n = 50
-        else:
-            n = 20
+        ny = nx = grid_size
 
-        self._get_sqare_size(n)
-        self.maze = MazeSelectionProcessor(n, n, maze_type=type_).process().T
+        self._get_sqare_size(max(nx, ny))
+        self.maze = MazeSelectionProcessor(nx, ny, maze_type=type_).process().T
 
         self.maze_buttons = np.empty(self.maze.shape, dtype=MazeSquare)
         for i in range(self.maze.shape[0]):
@@ -67,32 +60,31 @@ class MazeMenu(BaseMenu):
 
         return "", "maze"
 
-    @staticmethod
-    def _decide_color(maze_val: int) -> pygame.Color:
+    def _decide_color(self, maze_val: int) -> pygame.Color:
         if maze_val == 0:
-            return Colors.WHITE
+            return self._theme.hall_color
         if maze_val == 1:
-            return Colors.BLACK
+            return self._theme.wall_color
         if maze_val == 2:
-            return Colors.GREEN
+            return self._theme.start_color
         if maze_val == 3:
-            return Colors.RED
+            return self._theme.end_color
         if maze_val == 4:
-            return Colors.PURPLE
+            return self._theme.path_color
 
     def _get_sqare_size(self, num_cols: int) -> None:
-        window_width = int(self._config.get("display", "WINDOW_WIDTH"))
-        self.buffer = window_width // 10
-        maze_display_size = window_width - (self.buffer * 2)
-        self.square_size = maze_display_size // num_cols
-        self.buffer -= self.square_size // 2
+        window_width = self.window.get_width()
+        usable_display_size = (window_width - self.buffer * 2)
+        self.square_size = usable_display_size // (num_cols + 2)
+
+        self.buffer = (window_width - (self.square_size * (num_cols + 2))) / 2
 
     def _get_rect(self, i: int, j: int) -> pygame.Rect:
         rect = pygame.Rect(
             (i * self.square_size + self.buffer, j * self.square_size + self.buffer),
             (self.square_size, self.square_size),
         )
-        rect.center = (i * self.square_size + self.buffer, j * self.square_size + self.buffer)
+        rect.topleft = (i * self.square_size + self.buffer, j * self.square_size + self.buffer)
         return rect
 
     def _check_click(self, i: int, j: int) -> bool:

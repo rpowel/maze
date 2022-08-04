@@ -1,9 +1,10 @@
 import pygame
 from typing import Callable, List, Tuple
 
-from processors import OptionsProcessor
+from common.themes import THEME_LIST
+from processors import OptionsProcessor, RestartProcessor
 from .base import BaseMenu
-from .menu_objects import Button, DropDown
+from .menu_objects import Button, Selector
 
 
 class OptionsMenu(BaseMenu):
@@ -14,7 +15,8 @@ class OptionsMenu(BaseMenu):
         back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
-        self.window_height_dropdown = DropDown(0.25, 0.25, "Window Height", ["400", "500"])
+        self.theme_selector = Selector(0.5, 0.1, THEME_LIST, current_value=self._theme.name)
+        self.changes = False
 
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
         action = ""
@@ -22,12 +24,16 @@ class OptionsMenu(BaseMenu):
 
         if self.back_button.draw(self.window, event_list):
             self._logger.info("Back button clicked")
-            action = ""
+            if self.changes:
+                action = RestartProcessor().process
+            else:
+                action = ""
             menu = "main"
 
-        selection = self.window_height_dropdown.draw(self.window, event_list)
-        if selection:
-            action = OptionsProcessor("display", "window_height", selection).process
+        theme_change, theme_selection = self.theme_selector.draw(self.window, event_list)
+        if theme_change:
+            self.changes = True
+            action = OptionsProcessor("display", "theme", theme_selection).process
             menu = "options"
 
         return action, menu

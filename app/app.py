@@ -10,6 +10,7 @@ import sys
 import pygame
 import pygame.locals
 
+from common.events import RESTART_EVENT
 from processors import DisplayProcessor
 from menus import FinishedMenu, MainMenu, MazeMenu, OptionsMenu
 
@@ -33,6 +34,14 @@ def main():
     while True:
         event_list = pygame.event.get()
         display.process()
+
+        for event in event_list:
+            if event.type == pygame.locals.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == RESTART_EVENT:
+                main()
+
         if current_menu == "main":
             maze_created = False
             action, current_menu = main_menu.draw(event_list)
@@ -48,11 +57,6 @@ def main():
 
         if action:
             action()
-
-        for event in event_list:
-            if event.type == pygame.locals.QUIT:
-                pygame.quit()
-                sys.exit()
 
 
 if __name__ == "__main__":

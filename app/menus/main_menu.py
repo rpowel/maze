@@ -1,6 +1,7 @@
 import pygame
 from typing import Callable, List, Tuple
 
+from common.options import MazeSizes, MazeTypes
 from processors import ExitProcessor, OptionsProcessor
 from .base import BaseMenu
 from .menu_objects import Button, Selector
@@ -20,8 +21,8 @@ class MainMenu(BaseMenu):
         exit_img = pygame.image.load("images/exit.png")
         self.exit_button = Button(0.75, 0.9, exit_img)
 
-        self.maze_selector = Selector(0.5, 0.1, ["Prim", "Kruskal", "Recursive", "Random"])
-        self.size_selector = Selector(0.5, 0.2, ["Small", "Medium", "Large"])
+        self.maze_selector = Selector(0.5, 0.1, MazeTypes.list(), self._config.get("maze", "type"))
+        self.size_selector = Selector(0.5, 0.2, MazeSizes.list(), self._config.get("maze", "size"))
 
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
         action = ""
@@ -41,7 +42,7 @@ class MainMenu(BaseMenu):
             menu = ""
         type_change, maze_type = self.maze_selector.draw(self.window, event_list)
         if type_change:
-            action = OptionsProcessor("maze", "TYPE", maze_type).process
+            action = OptionsProcessor("maze", "type", maze_type).process
             menu = "main"
         size_change, maze_size = self.size_selector.draw(self.window, event_list)
         if size_change:
