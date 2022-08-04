@@ -4,6 +4,8 @@ from typing import List, Tuple, Type
 
 from common.config import AppConfig
 from common.logging import get_logger
+from common.themes import THEME_MAP
+from common.themes.base import BaseTheme
 
 
 class BaseMenuObject(abc.ABC):
@@ -12,6 +14,7 @@ class BaseMenuObject(abc.ABC):
     def __init__(self):
         self._logger = get_logger(class_=self)
         self._config = AppConfig()
+        self._theme: Type[BaseTheme] = THEME_MAP[self._config.get("display", "theme")]
 
     @abc.abstractmethod
     def draw(self, surface: pygame.Surface, event_list: List[pygame.event.Event]) -> Type[object]:

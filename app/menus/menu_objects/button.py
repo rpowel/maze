@@ -14,6 +14,7 @@ class Button(BaseMenuObject):
         super().__init__()
 
         self.image = self._scale_image(image, 0.15)
+        self._color_button_image(self.image, self._theme.button_color)
         self.rect = self.image.get_rect()
         self.rect.center = self._scale_abs_pos(x_rel_pos, y_rel_pos)
         self.pressed = False
@@ -42,3 +43,11 @@ class Button(BaseMenuObject):
         if self.rect.collidepoint(pos):
             return True
         return False
+
+    def _color_button_image(self, image: pygame.Surface, new_color: pygame.Color) -> pygame.Surface:
+        width, height = image.get_size()
+        r, g, b, _ = new_color
+        for x in range(width):
+            for y in range(height):
+                alpha = image.get_at((x, y))[3]
+                image.set_at((x, y), pygame.Color(r, g, b, alpha))

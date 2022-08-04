@@ -2,7 +2,6 @@ from typing import List, Tuple
 
 import pygame
 
-from common.colors import Colors
 from .base import BaseMenuObject
 from .button import Button
 
@@ -13,11 +12,12 @@ class Selector(BaseMenuObject):
         x_rel_pos: int,
         y_rel_pos: int,
         options: List[str],
+        current_value: str,
     ) -> None:
         super().__init__()
 
         self.options = options
-        self.current_index = 0
+        self.current_index = options.index(str(current_value))
         self.max_index = len(options) - 1
         self.current_value = self.options[self.current_index]
 
@@ -41,8 +41,7 @@ class Selector(BaseMenuObject):
             self._increase_index()
             change = True
 
-        # pygame.draw.rect(surface, Colors.TRANSPARENT, self.rect, 0)
-        msg = self.font.render(self.current_value, 1, Colors.WHITE)
+        msg = self.font.render(str(self.current_value).title(), 1, self._theme.text_color)
         surface.blit(msg, msg.get_rect(center=self.rect.center))
 
         return change, self.current_value
