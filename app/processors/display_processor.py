@@ -26,6 +26,9 @@ class DisplayProcessor(BaseProcessor):
     def _init_display(px_x: int, px_y: int) -> pygame.Surface:
         """Initialize window/screen for display."""
         surface = pygame.display.set_mode((px_x, px_y))
+        pygame.display.set_caption("Amazing Mazes")
+        icon = pygame.image.load("images/icon.png")
+        pygame.display.set_icon(icon)
         return surface
 
     def _draw_background(self):
