@@ -15,8 +15,11 @@ class OptionsMenu(BaseMenu):
         back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
-        self.theme_selector = Selector(0.5, 0.1, THEME_LIST, current_value=self._theme.name)
+        self.theme_selector = Selector(0.5, 0.1, THEME_LIST, current_value=self._theme.name, title="Color Theme")
         self.changes = False
+
+        reset_img = pygame.image.load("images/recycle.png").convert_alpha()
+        self.reset_button = Button(0.75, 0.9, reset_img)
 
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
         action = ""
@@ -34,6 +37,12 @@ class OptionsMenu(BaseMenu):
         if theme_change:
             self.changes = True
             action = OptionsProcessor("display", "theme", theme_selection).process
+            menu = "options"
+
+        if self.reset_button.draw(self.window, event_list):
+            self._logger.info("reset button clicked")
+            self.changes = True
+            self._config.reset()
             menu = "options"
 
         return action, menu

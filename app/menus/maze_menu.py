@@ -22,13 +22,12 @@ class MazeMenu(BaseMenu):
 
     def init_maze(self) -> None:
         type_ = self._config.get("maze", "type").lower()
-        grid_size = int(self._config.get("maze", "size"))
-        self._logger.info(f"Initializing maze. Type: {type_}, Size: {grid_size}")
+        grid_size_x = int(self._config.get("maze", "size_x"))
+        grid_size_y = int(self._config.get("maze", "size_y"))
+        self._logger.info(f"Initializing maze. Type: {type_}, Size: {grid_size_x}x{grid_size_y}")
 
-        ny = nx = grid_size
-
-        self._get_sqare_size(max(nx, ny))
-        self.maze = MazeSelectionProcessor(nx, ny, maze_type=type_).process().T
+        self._get_sqare_size(max(grid_size_x, grid_size_y))
+        self.maze = MazeSelectionProcessor(grid_size_x, grid_size_y, maze_type=type_).process().T
 
         self.maze_buttons = np.empty(self.maze.shape, dtype=MazeSquare)
         for i in range(self.maze.shape[0]):

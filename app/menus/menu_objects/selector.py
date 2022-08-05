@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import pygame
 
@@ -13,6 +13,7 @@ class Selector(BaseMenuObject):
         y_rel_pos: int,
         options: List[str],
         current_value: str,
+        title: Optional[str] = "",
     ) -> None:
         super().__init__()
 
@@ -20,8 +21,12 @@ class Selector(BaseMenuObject):
         self.current_index = options.index(str(current_value))
         self.max_index = len(options) - 1
         self.current_value = self.options[self.current_index]
+        self.title = title
 
         self.font = pygame.font.SysFont("Calibri", 20)
+        self.title_font = pygame.font.SysFont("Calibri", 22)
+        self.title_font.set_underline(True)
+
         x, y = self._scale_abs_pos(x_rel_pos, y_rel_pos)
         self.rect = pygame.Rect(x, y, 150, 40)
         self.rect.center = (x, y)
@@ -43,6 +48,10 @@ class Selector(BaseMenuObject):
 
         msg = self.font.render(str(self.current_value).title(), 1, self._theme.text_color)
         surface.blit(msg, msg.get_rect(center=self.rect.center))
+
+        if self.title:
+            title_text = self.title_font.render(str(self.title).title(), 1, self._theme.text_color)
+            surface.blit(title_text, title_text.get_rect(center=(self.rect.centerx, self.rect.top - 10)))
 
         return change, self.current_value
 

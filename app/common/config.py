@@ -4,7 +4,8 @@ import configparser
 class AppConfig:
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.path = "resources/config.cfg"
+        self.path = "resources/user_config.cfg"
+        self.default_path = "resources/default_config.cfg"
         self.config.read(self.path)
 
     def get(self, config_type: str, key: str) -> object:
@@ -15,3 +16,8 @@ class AppConfig:
         self.config.set(config_type, key, value)
         with open(self.path, "w") as configfile:
             self.config.write(configfile)
+
+    def reset(self):
+        self.config.read(self.default_path)
+        with open(self.path, "w") as user_config:
+            self.config.write(user_config)

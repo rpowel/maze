@@ -21,8 +21,15 @@ class MainMenu(BaseMenu):
         exit_img = pygame.image.load("images/exit.png")
         self.exit_button = Button(0.75, 0.9, exit_img)
 
-        self.maze_selector = Selector(0.5, 0.1, MazeTypes.list(), self._config.get("maze", "type"))
-        self.size_selector = Selector(0.5, 0.2, MazeSizes.list(), self._config.get("maze", "size"))
+        self.maze_selector = Selector(
+            0.5, 0.1, MazeTypes.list(), self._config.get("maze", "type"), title="Maze Type",
+        )
+        self.size_x_selector = Selector(
+            0.3, 0.25, MazeSizes.list(), self._config.get("maze", "size_x"), title="Maze Size X",
+        )
+        self.size_y_selector = Selector(
+            0.7, 0.25, MazeSizes.list(), self._config.get("maze", "size_y"), title="Maze Size Y",
+        )
 
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
         action = ""
@@ -44,9 +51,13 @@ class MainMenu(BaseMenu):
         if type_change:
             action = OptionsProcessor("maze", "type", maze_type).process
             menu = "main"
-        size_change, maze_size = self.size_selector.draw(self.window, event_list)
+        size_change, maze_size = self.size_x_selector.draw(self.window, event_list)
         if size_change:
-            action = OptionsProcessor("maze", "size", maze_size).process
+            action = OptionsProcessor("maze", "size_x", maze_size).process
+            menu = "main"
+        size_change, maze_size = self.size_y_selector.draw(self.window, event_list)
+        if size_change:
+            action = OptionsProcessor("maze", "size_y", maze_size).process
             menu = "main"
 
         return action, menu
