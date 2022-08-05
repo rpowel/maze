@@ -15,7 +15,7 @@ class OptionsMenu(BaseMenu):
         back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
-        self.theme_selector = Selector(0.5, 0.1, THEME_LIST, current_value=self._theme.name)
+        self.theme_selector = Selector(0.5, 0.1, THEME_LIST, current_value=self._theme.name, title="Color Theme")
         self.changes = False
 
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:

@@ -4,7 +4,7 @@ import configparser
 class AppConfig:
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.path = "resources/config.cfg"
+        self.path = "resources/user_config.cfg"
         self.config.read(self.path)
 
     def get(self, config_type: str, key: str) -> object:
