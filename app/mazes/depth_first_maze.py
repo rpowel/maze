@@ -6,11 +6,13 @@ from .base import MazeBase
 
 
 class DepthFirstMaze(MazeBase):
-    visited = set()
-    stack = set()
-    n_x = 0
-    n_y = 0
-    maze = None
+    def __init__(self):
+        super().__init__()
+        self.visited = set()
+        self.stack = set()
+        self.n_x = 0
+        self.n_y = 0
+        self.maze = None
 
     def make_maze(self, n_x: int, n_y: int) -> np.ndarray:
         self.n_x = n_x
@@ -23,7 +25,8 @@ class DepthFirstMaze(MazeBase):
         self.stack.add((start_i, start_j))
 
         num_iter = 0
-        while len(self.stack) > 0 and num_iter < (n_x ** 3):
+        while len(self.stack) > 0 and num_iter < (n_x ** 2):
+            self._logger.info(self.maze)
             num_iter += 1
             i, j = self.stack.pop()
             self._mark_visited(i, j)
@@ -50,27 +53,18 @@ class DepthFirstMaze(MazeBase):
 
     def _get_unvisited_neighbors(self, i: int, j: int) -> List[Tuple[int, int]]:
         neighbors = []
-        if i != 0:
-            if not (i - 1, j) in self.visited:
-                if i >= 2:
-                    if not (i - 2, j) in self.visited:
-                        neighbors.append((i - 2, j))
-        if i != (self.n_x - 1):
-            if not (i + 1, j) in self.visited:
-                if i <= self.n_x - 3:
-                    if not (i + 2, j) in self.visited:
-                        neighbors.append((i + 2, j))
-        if j != 0:
-            if not (i, j - 1) in self.visited:
-                if j >= 2:
-                    if not (i, j - 2) in self.visited:
-                        neighbors.append((i, j - 2))
-        if j != (self.n_y - 1):
-            if not (i, j + 1) in self.visited:
-                if j <= self.n_y - 3:
-                    if not (i, j + 2) in self.visited:
-                        neighbors.append((i, j + 2))
-
+        if i >= 2:
+            if not (i - 2, j) in self.visited:
+                neighbors.append((i - 2, j))
+        if i <= self.n_x - 3:
+            if not (i + 2, j) in self.visited:
+                neighbors.append((i + 2, j))
+        if j >= 2:
+            if not (i, j - 2) in self.visited:
+                neighbors.append((i, j - 2))
+        if j <= self.n_y - 3:
+            if not (i, j + 2) in self.visited:
+                neighbors.append((i, j + 2))
         return neighbors
 
     @staticmethod

@@ -32,8 +32,8 @@ class MazeSelectionProcessor(BaseProcessor):
             maze = self._set_exit(maze)
         return maze
 
-    @staticmethod
-    def _set_entrance(maze: np.ndarray) -> np.ndarray:
+    def _set_entrance(self, maze: np.ndarray) -> np.ndarray:
+        self._logger.info("Setting entrance")
         while True:
             x, y = randint(1, maze.shape[0] - 1), 0
             if maze[x, y + 1] == 0:
@@ -41,8 +41,8 @@ class MazeSelectionProcessor(BaseProcessor):
         maze[x, y] = 2
         return maze
 
-    @staticmethod
-    def _set_exit(maze: np.ndarray) -> np.ndarray:
+    def _set_exit(self, maze: np.ndarray) -> np.ndarray:
+        self._logger.info("Setting exit")
         while True:
             x, y = randint(1, maze.shape[0] - 1), maze.shape[1] - 1
             if maze[x, y - 1] == 0:
