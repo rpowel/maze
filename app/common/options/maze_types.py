@@ -1,7 +1,7 @@
 from typing import Dict, List, Type
 
 from mazes.base import MazeBase
-from mazes import RandomMaze, PrimMaze, KruskalMaze, RecursiveDivisionMaze
+from mazes import DepthFirstMaze, RandomMaze, PrimMaze, KruskalMaze, RecursiveDivisionMaze
 
 
 class MazeTypes:
@@ -9,6 +9,7 @@ class MazeTypes:
     PRIM = "prim"
     RANDOM = "random"
     RECURSIVE = "recursive"
+    DEPTH_FIRST = "depth first"
 
     @classmethod
     def list(cls) -> List[str]:
@@ -17,6 +18,7 @@ class MazeTypes:
             cls.PRIM,
             cls.RANDOM,
             cls.RECURSIVE,
+            cls.DEPTH_FIRST,
         ]
 
     @classmethod
@@ -26,4 +28,5 @@ class MazeTypes:
             cls.PRIM: PrimMaze,
             cls.RANDOM: RandomMaze,
             cls.RECURSIVE: RecursiveDivisionMaze,
+            cls.DEPTH_FIRST: DepthFirstMaze,
         }
