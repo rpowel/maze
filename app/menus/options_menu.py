@@ -18,20 +18,20 @@ class OptionsMenu(BaseMenu):
         )
         self.changes = False
 
-        self.height_selector = Selector(
-            0.7,
-            0.25,
-            WindowHeight.list(),
-            current_value=self.window.get_height(),
-            title="Window Height",
-        )
-        self.width_selector = Selector(
-            0.3,
-            0.25,
-            WindowWidth.list(),
-            current_value=self.window.get_width(),
-            title="Window Width",
-        )
+        # self.height_selector = Selector(
+        #     0.7,
+        #     0.25,
+        #     WindowHeight.list(),
+        #     current_value=self.window.get_height(),
+        #     title="Window Height",
+        # )
+        # self.width_selector = Selector(
+        #     0.3,
+        #     0.25,
+        #     WindowWidth.list(),
+        #     current_value=self.window.get_width(),
+        #     title="Window Width",
+        # )
 
         back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
@@ -58,19 +58,19 @@ class OptionsMenu(BaseMenu):
             self.changes = True
             action = OptionsProcessor("display", "theme", theme_selection).process
 
-        width_change, width_selection = self.width_selector.draw(
-            self.window, event_list,
-        )
-        if width_change:
-            self.changes = True
-            action = OptionsProcessor("display", "window_width", width_selection).process
-
-        height_change, height_selection = self.height_selector.draw(
-            self.window, event_list,
-        )
-        if height_change:
-            self.changes = True
-            action = OptionsProcessor("display", "window_height", height_selection).process
+        # width_change, width_selection = self.width_selector.draw(
+        #     self.window, event_list,
+        # )
+        # if width_change:
+        #     self.changes = True
+        #     action = OptionsProcessor("display", "window_width", width_selection).process
+        #
+        # height_change, height_selection = self.height_selector.draw(
+        #     self.window, event_list,
+        # )
+        # if height_change:
+        #     self.changes = True
+        #     action = OptionsProcessor("display", "window_height", height_selection).process
 
         if self.reset_button.draw(self.window, event_list):
             self._logger.info("reset button clicked")
