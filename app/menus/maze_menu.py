@@ -16,9 +16,22 @@ class MazeMenu(BaseMenu):
         self.square_size: int = None
         self.num_active: int = 0
         self.buffer = 10  # 10px
+        self.buffer_ = 10
+
+        self.font = pygame.font.SysFont("Calibri", 20)
+        self.font.set_underline(True)
+        self.score_ticks = 0
+        self.tick_rate = 30
 
         back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
+
+        self.time_rect = pygame.Rect(
+            self.window.get_rect().right - 150,
+            self.window.get_rect().bottom - 100,
+            100,
+            100,
+        )
 
     def init_maze(self) -> None:
         type_ = self._config.get("maze", "type").lower()
@@ -37,6 +50,12 @@ class MazeMenu(BaseMenu):
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
         if self.back_button.draw(self.window, event_list):
             return "", "main"
+
+        time_seconds = (self.score_ticks // self.tick_rate) % 60
+        time_minutes = (self.score_ticks // self.tick_rate) // 60
+        time = f"{str(time_minutes).zfill(2)}:{str(time_seconds).zfill(2)}"
+        time_msg = self.font.render(time, True, self._theme.text_color)
+        self.window.blit(time_msg, time_msg.get_rect(center=self.time_rect.center))
 
         for i in range(self.maze.shape[0]):
             for j in range(self.maze.shape[1]):
@@ -72,6 +91,7 @@ class MazeMenu(BaseMenu):
             return self._theme.path_color
 
     def _get_sqare_size(self, num_cols: int) -> None:
+        self.buffer = self.buffer_
         window_width = self.window.get_width()
         usable_display_size = (window_width - self.buffer * 2)
         self.square_size = usable_display_size // (num_cols + 2)
