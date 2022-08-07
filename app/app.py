@@ -53,6 +53,7 @@ def main():
         elif current_menu == "finished":
             finished_menu.score_ticks = score_ticks
             finished_menu.tick_rate = tick_rate
+            pygame.time.wait(500)
             action, current_menu = finished_menu.draw(event_list)
 
         if action:
