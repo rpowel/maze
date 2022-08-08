@@ -10,6 +10,7 @@ class RecursiveDivisionMaze(MazeBase):
     """Make maze using recursive algorithm."""
 
     def __init__(self):
+        super().__init__()
         self.maze = None
         self.space = None
 
@@ -54,10 +55,10 @@ class RecursiveDivisionMaze(MazeBase):
         self._check_direction_choice(direction)
         if direction == "x":
             space[:, :wall_index] = new_space_1
-            space[:, wall_index + 1 :] = new_space_2
+            space[:, wall_index + 1:] = new_space_2
         else:
             space[:wall_index, :] = new_space_1
-            space[wall_index + 1 :, :] = new_space_2
+            space[wall_index + 1:, :] = new_space_2
         return space
 
     def _split_space(
@@ -70,12 +71,12 @@ class RecursiveDivisionMaze(MazeBase):
             space[:, wall] = 1
             space[door, wall] = 0
             new_space_1 = space[:, :wall]
-            new_space_2 = space[:, wall + 1 :]
+            new_space_2 = space[:, wall + 1:]
         else:
             space[wall, :] = 1
             space[wall, door] = 0
             new_space_1 = space[:wall, :]
-            new_space_2 = space[wall + 1 :, :]
+            new_space_2 = space[wall + 1:, :]
         return space, new_space_1, new_space_2, wall, door
 
     def _rand_index_wall_door(
