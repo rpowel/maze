@@ -5,6 +5,14 @@ from .base import BaseTheme
 
 class DefaultTheme(BaseTheme):
     @property
+    def normal_font(self) -> pygame.font.Font:
+        return pygame.font.SysFont("Calibri", 20)
+
+    @property
+    def header_font(self) -> pygame.font.Font:
+        return pygame.font.SysFont("Calibri", 22)
+
+    @property
     def name(self) -> str:
         return "default"
 

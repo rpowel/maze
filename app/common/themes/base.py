@@ -48,3 +48,13 @@ class BaseTheme(abc.ABC):
     @abc.abstractmethod
     def text_color(self) -> pygame.Color:
         ...
+
+    @property
+    @abc.abstractmethod
+    def normal_font(self) -> pygame.font.Font:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def header_font(self) -> pygame.font.Font:
+        ...
