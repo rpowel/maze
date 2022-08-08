@@ -2,7 +2,7 @@ from typing import Sequence, List, Tuple, Callable
 import numpy as np
 import pygame
 
-from processors.maze_selection_processor import MazeSelectionProcessor
+from processors import FinishProcessor, MazeSelectionProcessor
 from .base import BaseMenu
 from .menu_objects import Button, MazeSquare
 
@@ -17,6 +17,10 @@ class MazeMenu(BaseMenu):
         self.num_active: int = 0
         self.buffer = 10  # 10px
         self.buffer_ = 10
+
+        self.maze_type = None
+        self.grid_size_x = None
+        self.grid_size_y = None
 
         self.font = pygame.font.SysFont("Calibri", 20)
         self.font.set_underline(True)
@@ -34,13 +38,13 @@ class MazeMenu(BaseMenu):
         )
 
     def init_maze(self) -> None:
-        type_ = self._config.get("maze", "type").lower()
-        grid_size_x = int(self._config.get("maze", "size_x"))
-        grid_size_y = int(self._config.get("maze", "size_y"))
-        self._logger.info(f"Initializing maze. Type: {type_}, Size: {grid_size_x}x{grid_size_y}")
+        self.maze_type = self._config.get("maze", "type").lower()
+        self.grid_size_x = int(self._config.get("maze", "size_x"))
+        self.grid_size_y = int(self._config.get("maze", "size_y"))
+        self._logger.info(f"Initializing maze. Type: {self.maze_type}, Size: {self.grid_size_x}x{self.grid_size_y}")
 
-        self._get_sqare_size(max(grid_size_x, grid_size_y))
-        self.maze = MazeSelectionProcessor(grid_size_x, grid_size_y, maze_type=type_).process().T
+        self._get_sqare_size(max(self.grid_size_x, self.grid_size_y))
+        self.maze = MazeSelectionProcessor(self.grid_size_x, self.grid_size_y, maze_type=self.maze_type).process().T
 
         self.maze_buttons = np.empty(self.maze.shape, dtype=MazeSquare)
         for i in range(self.maze.shape[0]):
@@ -74,7 +78,13 @@ class MazeMenu(BaseMenu):
 
         if self._check_finished():
             self._logger.info("Maze finished")
-            return "", "finished"
+            processor = FinishProcessor(
+                maze_type=self.maze_type,
+                size_x=self.grid_size_x,
+                size_y=self.grid_size_y,
+                time_seconds=(self.score_ticks // self.tick_rate),
+            ).process
+            return processor, "finished"
 
         return "", "maze"
 

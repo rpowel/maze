@@ -2,8 +2,8 @@ import pygame
 import pygame.locals
 
 from common.events import RESTART_EVENT
-from processors import DisplayProcessor, ExitProcessor
 from menus import FinishedMenu, MainMenu, MazeMenu, OptionsMenu
+from processors import DisplayProcessor, ExitProcessor
 
 
 def main():
