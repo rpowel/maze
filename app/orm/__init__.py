@@ -5,4 +5,5 @@ __all__ = [
 ]
 
 for table in __all__:
-    table.create_table(safe=True)
+    local_ = locals()
+    local_[table].create_table(safe=True)
