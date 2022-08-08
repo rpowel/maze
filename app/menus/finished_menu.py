@@ -18,8 +18,6 @@ class FinishedMenu(BaseMenu):
         self.exit_button = Button(0.75, 0.9, exit_img)
         self.score_ticks = 0
         self.tick_rate = 30
-        self.font = pygame.font.SysFont("Calibri", 20)
-        self.font.set_underline(True)
 
         self.title_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 50, 100, 100)
         self.time_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 100, 100, 100)
@@ -39,11 +37,11 @@ class FinishedMenu(BaseMenu):
         maze_size_x = f"X Size: {self._config.get('maze', 'size_x')} Cells"
         maze_size_y = f"Y Size: {self._config.get('maze', 'size_y')} Cells"
 
-        title_msg = self.font.render(title, True, self._theme.text_color)
-        time_msg = self.font.render(time, True, self._theme.text_color)
-        type_msg = self.font.render(maze_type.title(), True, self._theme.text_color)
-        size_x_msg = self.font.render(maze_size_x, True, self._theme.text_color)
-        size_y_msg = self.font.render(maze_size_y, True, self._theme.text_color)
+        title_msg = self._theme.header_font.render(title, True, self._theme.text_color)
+        time_msg = self._theme.header_font.render(time, True, self._theme.text_color)
+        type_msg = self._theme.header_font.render(maze_type.title(), True, self._theme.text_color)
+        size_x_msg = self._theme.header_font.render(maze_size_x, True, self._theme.text_color)
+        size_y_msg = self._theme.header_font.render(maze_size_y, True, self._theme.text_color)
 
         self.window.blit(title_msg, title_msg.get_rect(center=self.title_rect.center))
         self.window.blit(time_msg, time_msg.get_rect(center=self.time_rect.center))

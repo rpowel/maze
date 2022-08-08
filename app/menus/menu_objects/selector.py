@@ -23,10 +23,6 @@ class Selector(BaseMenuObject):
         self.current_value = self.options[self.current_index]
         self.title = title
 
-        self.font = pygame.font.SysFont("Calibri", 20)
-        self.title_font = pygame.font.SysFont("Calibri", 22)
-        self.title_font.set_underline(True)
-
         x, y = self._scale_abs_pos(x_rel_pos, y_rel_pos)
         self.rect = pygame.Rect(x, y, 150, 40)
         self.rect.center = (x, y)
@@ -37,7 +33,12 @@ class Selector(BaseMenuObject):
         right_img = pygame.image.load("images/menu-right.png").convert_alpha()
         self.right_button = Button(x_rel_pos + 0.15, y_rel_pos, right_img)
 
-    def draw(self, surface: pygame.Surface, event_list: List[pygame.event.Event]) -> Tuple[bool, str]:
+    def draw(
+        self,
+        surface: pygame.Surface,
+        event_list: List[pygame.event.Event],
+    ) -> Tuple[bool, str]:
+
         change = False
         if self.left_button.draw(surface, event_list):
             self._decrease_index()
@@ -46,12 +47,23 @@ class Selector(BaseMenuObject):
             self._increase_index()
             change = True
 
-        msg = self.font.render(str(self.current_value).title(), 1, self._theme.text_color)
+        msg = self._theme.normal_font.render(
+            str(self.current_value).title(),
+            True,
+            self._theme.text_color,
+        )
         surface.blit(msg, msg.get_rect(center=self.rect.center))
 
         if self.title:
-            title_text = self.title_font.render(str(self.title).title(), 1, self._theme.text_color)
-            surface.blit(title_text, title_text.get_rect(center=(self.rect.centerx, self.rect.top - 10)))
+            title_text = self._theme.header_font.render(
+                str(self.title).title(),
+                True,
+                self._theme.text_color,
+            )
+            surface.blit(
+                title_text,
+                title_text.get_rect(center=(self.rect.centerx, self.rect.top - 10)),
+            )
 
         return change, self.current_value
 

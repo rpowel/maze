@@ -22,8 +22,6 @@ class MazeMenu(BaseMenu):
         self.grid_size_x = None
         self.grid_size_y = None
 
-        self.font = pygame.font.SysFont("Calibri", 20)
-        self.font.set_underline(True)
         self.score_ticks = 0
         self.tick_rate = 30
 
@@ -58,7 +56,7 @@ class MazeMenu(BaseMenu):
         time_seconds = (self.score_ticks // self.tick_rate) % 60
         time_minutes = (self.score_ticks // self.tick_rate) // 60
         time = f"{str(time_minutes).zfill(2)}:{str(time_seconds).zfill(2)}"
-        time_msg = self.font.render(time, True, self._theme.text_color)
+        time_msg = self._theme.normal_font.render(time, True, self._theme.text_color)
         self.window.blit(time_msg, time_msg.get_rect(center=self.time_rect.center))
 
         for i in range(self.maze.shape[0]):
