@@ -1,9 +1,9 @@
 import numpy as np
-
-from common.percolation import check_percolation
+from processors import MazeSelectionProcessor
 
 
 def test_percolation_check_true():
+    processor = MazeSelectionProcessor(0, 0)
     maze = np.array(
         [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -21,10 +21,11 @@ def test_percolation_check_true():
         ],
         dtype=int,
     )
-    assert check_percolation(maze) is True
+    assert processor.check_percolation(maze) is True
 
 
 def test_percolation_check_false():
+    processor = MazeSelectionProcessor(0, 0)
     maze = np.array(
         [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -42,4 +43,4 @@ def test_percolation_check_false():
         ],
         dtype=int,
     )
-    assert check_percolation(maze) is False
+    assert processor.check_percolation(maze) is False
