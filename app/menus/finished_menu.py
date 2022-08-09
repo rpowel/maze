@@ -1,9 +1,11 @@
-import pygame
 from typing import Callable, List, Tuple
 
+import pygame
+
+from orm import Scores
 from processors import ExitProcessor
 from .base import BaseMenu
-from .menu_objects import Button
+from .menu_objects import Button, Table
 
 
 class FinishedMenu(BaseMenu):
@@ -19,11 +21,11 @@ class FinishedMenu(BaseMenu):
         self.score_ticks = 0
         self.tick_rate = 30
 
-        self.title_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 50, 100, 100)
-        self.time_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 100, 100, 100)
-        self.type_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 150, 100, 100)
-        self.size_x_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 200, 100, 100)
-        self.size_y_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 250, 100, 100)
+        self.title_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 0, 100, 100)
+        self.time_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 50, 100, 100)
+        self.type_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 100, 100, 100)
+        self.size_x_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 150, 100, 100)
+        self.size_y_rect = pygame.Rect(self.window.get_rect().right * .5 - 50, 200, 100, 100)
 
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
         action = ""
@@ -57,5 +59,15 @@ class FinishedMenu(BaseMenu):
             self._logger.info("Exit button clicked.")
             action = ExitProcessor().process
             menu = ""
+
+        data = Scores.top_n_scores(
+            maze_type=self._config.get("maze", "type"),
+            size_x=self._config.get("maze", "size_x"),
+            size_y=self._config.get("maze", "size_y"),
+            num_limit=5,
+        )
+        headers = ["Type", "Size X", "Size Y", "Time", "Date Finished"]
+        score_table = Table("High Scores", 0.05, 0.5, headers, data)
+        score_table.draw(self.window, event_list)
 
         return action, menu
