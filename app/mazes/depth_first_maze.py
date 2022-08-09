@@ -1,6 +1,7 @@
-import numpy as np
 import random
 from typing import List, Tuple
+
+import numpy as np
 
 from .base import MazeBase
 
@@ -26,7 +27,6 @@ class DepthFirstMaze(MazeBase):
 
         num_iter = 0
         while len(self.stack) > 0 and num_iter < (n_x ** 2):
-            self._logger.info(self.maze)
             num_iter += 1
             i, j = self.stack.pop()
             self._mark_visited(i, j)
