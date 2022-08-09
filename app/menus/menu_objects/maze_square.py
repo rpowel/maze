@@ -17,7 +17,6 @@ class MazeSquare(BaseMenuObject):
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked is False:
-                self._logger.info("Button clicked.")
                 self.clicked = True
                 action = True
 

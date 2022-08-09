@@ -10,7 +10,9 @@ class DefaultTheme(BaseTheme):
 
     @property
     def header_font(self) -> pygame.font.Font:
-        return pygame.font.SysFont("Calibri", 22)
+        font = pygame.font.SysFont("Calibri", 22)
+        font.set_underline(True)
+        return font
 
     @property
     def name(self) -> str:
