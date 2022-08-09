@@ -7,8 +7,8 @@ from .base import BaseMenuObject
 class Button(BaseMenuObject):
     def __init__(
         self,
-        x_rel_pos: int,
-        y_rel_pos: int,
+        x_rel_pos: float,
+        y_rel_pos: float,
         image: pygame.Surface,
     ) -> None:
         super().__init__()
@@ -44,7 +44,8 @@ class Button(BaseMenuObject):
             return True
         return False
 
-    def _color_button_image(self, image: pygame.Surface, new_color: pygame.Color) -> pygame.Surface:
+    @staticmethod
+    def _color_button_image(image: pygame.Surface, new_color: pygame.Color):
         width, height = image.get_size()
         r, g, b, _ = new_color
         for x in range(width):
