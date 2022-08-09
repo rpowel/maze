@@ -9,8 +9,8 @@ from .button import Button
 class Selector(BaseMenuObject):
     def __init__(
         self,
-        x_rel_pos: int,
-        y_rel_pos: int,
+        x_rel_pos: float,
+        y_rel_pos: float,
         options: List[str],
         current_value: str,
         title: Optional[str] = "",
