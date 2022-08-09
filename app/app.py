@@ -2,8 +2,8 @@ import pygame
 import pygame.locals
 
 from common.events import RESTART_EVENT
-from processors import DisplayProcessor, ExitProcessor
 from menus import FinishedMenu, MainMenu, MazeMenu, OptionsMenu
+from processors import DisplayProcessor, ExitProcessor
 
 
 def main():
@@ -53,6 +53,7 @@ def main():
         elif current_menu == "finished":
             finished_menu.score_ticks = score_ticks
             finished_menu.tick_rate = tick_rate
+            pygame.time.wait(500)
             action, current_menu = finished_menu.draw(event_list)
 
         if action:

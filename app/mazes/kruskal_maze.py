@@ -8,6 +8,7 @@ from mazes.base import MazeBase
 
 class KruskalMaze(MazeBase):
     def __init__(self):
+        super().__init__()
         self.num_cells_last = None
         self.maze = None
         self._repeat_iterations = None

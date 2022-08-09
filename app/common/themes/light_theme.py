@@ -4,6 +4,15 @@ from .base import BaseTheme
 
 
 class LightTheme(BaseTheme):
+    @property
+    def normal_font(self) -> pygame.font.Font:
+        return pygame.font.SysFont("Calibri", 20)
+
+    @property
+    def header_font(self) -> pygame.font.Font:
+        font = pygame.font.SysFont("Calibri", 22)
+        font.set_underline(True)
+        return font
 
     @property
     def name(self) -> str:

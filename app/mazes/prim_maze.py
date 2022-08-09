@@ -8,6 +8,7 @@ from mazes.base import MazeBase
 
 class PrimMaze(MazeBase):
     def __init__(self):
+        super().__init__()
         self.loop = True
         self.walls = []
         self.passage = []
