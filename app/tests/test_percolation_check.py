@@ -1,9 +1,10 @@
 import numpy as np
-from processors import MazeSelectionProcessor
+
+from mazes.maze_generators import PrimMaze
 
 
 def test_percolation_check_true():
-    processor = MazeSelectionProcessor(0, 0)
+    processor = PrimMaze()
     maze = np.array(
         [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -25,7 +26,7 @@ def test_percolation_check_true():
 
 
 def test_percolation_check_false():
-    processor = MazeSelectionProcessor(0, 0)
+    processor = PrimMaze()
     maze = np.array(
         [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],

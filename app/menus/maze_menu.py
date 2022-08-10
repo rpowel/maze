@@ -1,8 +1,10 @@
 from typing import Sequence, List, Tuple, Callable
+
 import numpy as np
 import pygame
 
-from processors import FinishProcessor, MazeSelectionProcessor
+from mazes import MazeFactory
+from processors import FinishProcessor
 from .base import BaseMenu
 from .menu_objects import Button, MazeSquare
 
@@ -21,6 +23,8 @@ class MazeMenu(BaseMenu):
         self.maze_type = None
         self.grid_size_x = None
         self.grid_size_y = None
+        self.maze_generator = None
+        self.finished_generating = False
 
         self.score_ticks = 0
         self.tick_rate = 30
@@ -42,7 +46,10 @@ class MazeMenu(BaseMenu):
         self._logger.info(f"Initializing maze. Type: {self.maze_type}, Size: {self.grid_size_x}x{self.grid_size_y}")
 
         self._get_sqare_size(max(self.grid_size_x, self.grid_size_y))
-        self.maze = MazeSelectionProcessor(self.grid_size_x, self.grid_size_y, maze_type=self.maze_type).process().T
+        self.maze_generator = MazeFactory(self.grid_size_x, self.grid_size_y, maze_type=self.maze_type).process()
+        self.maze = next(self.maze_generator).T
+        self.finished_generating = False
+        self.num_active = 0
 
         self.maze_buttons = np.empty(self.maze.shape, dtype=MazeSquare)
         for i in range(self.maze.shape[0]):
@@ -50,8 +57,18 @@ class MazeMenu(BaseMenu):
                 self.maze_buttons[i, j] = MazeSquare(self.maze[i, j], self._get_rect(i, j))
 
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
+        self.score_ticks += 1
         if self.back_button.draw(self.window, event_list):
             return "", "main"
+
+        if not self.finished_generating:
+            try:
+                self.maze = next(self.maze_generator).T
+                self.score_ticks = 0
+            except StopIteration as stop:
+                self.finished_generating = True
+                self.maze = stop.value.T
+                self.score_ticks = 0
 
         time_seconds = (self.score_ticks // self.tick_rate) % 60
         time_minutes = (self.score_ticks // self.tick_rate) // 60
@@ -127,6 +144,10 @@ class MazeMenu(BaseMenu):
         return True
 
     def _check_finished(self) -> bool:
+        if not self.finished_generating:
+            return False
+        elif self.num_active < 2:
+            return False
         i, j = np.where(self.maze == 3)
         i = i[0]
         j = j[0]

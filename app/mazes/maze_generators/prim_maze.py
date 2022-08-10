@@ -3,7 +3,7 @@ import random
 import numpy as np
 from scipy.spatial import cKDTree
 
-from mazes.base import MazeBase
+from .base import MazeBase
 
 
 class PrimMaze(MazeBase):
@@ -33,7 +33,7 @@ class PrimMaze(MazeBase):
 
             if len(self.passage) > (n_x * n_y):
                 break  # prevents weird mazes with only a few squares
-        self.maze = self._prepare_final(self.maze)
+            yield self.maze
         return self.maze
 
     @staticmethod
