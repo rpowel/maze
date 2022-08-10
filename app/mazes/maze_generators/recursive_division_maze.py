@@ -3,7 +3,7 @@ from random import random, randint
 import numpy as np
 from numpy import full
 
-from mazes.base import MazeBase
+from .base import MazeBase
 
 
 class RecursiveDivisionMaze(MazeBase):
@@ -18,8 +18,7 @@ class RecursiveDivisionMaze(MazeBase):
         self.maze = full([n_x, n_y], 0, dtype=int)
         self.space = self.maze
         self.maze = self._divide_space(self.space)
-        final_maze = self._prepare_final(self.maze)
-        return final_maze
+        return [self.maze]
 
     def _divide_space(self, space: np.ndarray, prev_door_index: int = 0) -> np.ndarray:
         """Performe recursive division of maze and create walls and doors."""

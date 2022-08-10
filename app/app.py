@@ -43,7 +43,6 @@ def main():
                 maze_created = True
                 score_ticks = 0
             action, current_menu = maze_menu.draw(event_list)
-            maze_menu.score_ticks = score_ticks
             maze_menu.tick_rate = tick_rate
             score_ticks += 1
 
@@ -51,8 +50,8 @@ def main():
             action, current_menu = options_menu.draw(event_list)
 
         elif current_menu == "finished":
-            finished_menu.score_ticks = score_ticks
-            finished_menu.tick_rate = tick_rate
+            finished_menu.score_ticks = maze_menu.score_ticks
+            finished_menu.tick_rate = maze_menu.tick_rate
             pygame.time.wait(500)
             action, current_menu = finished_menu.draw(event_list)
 

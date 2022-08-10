@@ -3,7 +3,7 @@ from random import randint, random
 import numpy as np
 from numpy import full, arange, reshape, ravel, ones
 
-from mazes.base import MazeBase
+from .base import MazeBase
 
 
 class KruskalMaze(MazeBase):
@@ -25,7 +25,7 @@ class KruskalMaze(MazeBase):
             self._join_cells()
             if self._check_final():
                 break
-        self.maze = self._prepare_final(self.maze)
+            yield self.maze
         return self.maze
 
     def _make_walls(self):

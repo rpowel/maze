@@ -41,7 +41,8 @@ class DepthFirstMaze(MazeBase):
             self.stack.add((next_i, next_j))
             self._mark_visited(next_i, next_j)
 
-        return self._prepare_final(self.maze)
+            yield self.maze
+        return self.maze
 
     def _pick_start_cell(self) -> Tuple[int, int]:
         start_i = random.randint(0, self.n_x - 1)

@@ -1,7 +1,9 @@
-import pygame
 from typing import Callable, List, Tuple
 
-from common.options import MazeSizes, MazeTypes
+import pygame
+
+from common.options import MazeSizes
+from mazes.maze_factory import MazeTypes
 from processors import ExitProcessor, OptionsProcessor
 from .base import BaseMenu
 from .menu_objects import Button, Selector

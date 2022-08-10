@@ -1,41 +1,45 @@
-from random import randint
-from typing import Type
+"""Base class for maze generator."""
+import abc
+import random
 
 import numpy as np
-from mazes.base import MazeBase
 
-from common.options import MazeTypes
-from .base import BaseProcessor
+from common.logging import get_logger
 
 
-class MazeSelectionProcessor(BaseProcessor):
-    def __init__(self, n_x: int, n_y: int, maze_type: str = MazeTypes.PRIM) -> None:
-        super().__init__()
-        self.n_x = n_x
-        self.n_y = n_y
-        self.maze_type = maze_type
+class MazeBase(abc.ABC):
+    """Abstract base for maze generator."""
 
-    def process(self) -> np.ndarray:
-        maze_class = MazeTypes.map()[self.maze_type]
+    def __init__(self):
+        self._logger = get_logger(class_=self)
 
-        maze = self._make_check_maze(self.n_x, self.n_y, maze_class)
+    def generate(self, n_x: int, n_y: int) -> np.ndarray:
+        ready = False
+        prepped_maze = None
 
-        return maze
+        while not ready:
+            for maze in self.make_maze(n_x, n_y):
+                prepped_maze = self._prepare_final(maze)
+                yield prepped_maze
+            prepped_maze = self._set_entrance(prepped_maze)
+            prepped_maze = self._set_exit(prepped_maze)
+            ready = self.check_percolation(prepped_maze)
 
-    def _make_check_maze(self, n_x: int, n_y: int, maze_class: Type[MazeBase]) -> np.ndarray:
-        maze = maze_class().make_maze(n_x, n_y)
-        maze = self._set_entrance(maze)
-        maze = self._set_exit(maze)
-        while not self.check_percolation(maze):
-            maze = maze_class().make_maze(n_x, n_y)
-            maze = self._set_entrance(maze)
-            maze = self._set_exit(maze)
-        return maze
+        return prepped_maze
+
+    @abc.abstractmethod
+    def make_maze(self, n_x: int, n_y: int) -> np.ndarray:
+        ...
+
+    @staticmethod
+    @abc.abstractmethod
+    def _prepare_final(maze: np.ndarray) -> np.ndarray:
+        ...
 
     def _set_entrance(self, maze: np.ndarray) -> np.ndarray:
         self._logger.info("Setting entrance")
         while True:
-            x, y = randint(1, maze.shape[0] - 1), 0
+            x, y = random.randint(1, maze.shape[0] - 1), 0
             if maze[x, y + 1] == 0:
                 break
         maze[x, y] = 2
@@ -44,7 +48,7 @@ class MazeSelectionProcessor(BaseProcessor):
     def _set_exit(self, maze: np.ndarray) -> np.ndarray:
         self._logger.info("Setting exit")
         while True:
-            x, y = randint(1, maze.shape[0] - 1), maze.shape[1] - 1
+            x, y = random.randint(1, maze.shape[0] - 1), maze.shape[1] - 1
             if maze[x, y - 1] == 0:
                 break
         maze[x, y] = 3
