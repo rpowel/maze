@@ -1,6 +1,6 @@
 import random
 
-from mazes import DepthFirstMaze
+from mazes.maze_generators import DepthFirstMaze
 
 
 def test_maze_depth_first():

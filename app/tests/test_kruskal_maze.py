@@ -2,13 +2,13 @@ import random
 
 import numpy as np
 
-from mazes import KruskalMaze
+from mazes.maze_generators import KruskalMaze
 
 
 def test_make_maze():
     random.seed(1)
     n_x = n_y = 10
-    result = KruskalMaze().make_maze(n_x, n_y)
+    result = [val for val in KruskalMaze().generate(n_x, n_y)][0]
     correct = np.array(
         [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
