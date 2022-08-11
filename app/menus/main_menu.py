@@ -20,7 +20,7 @@ class MainMenu(BaseMenu):
         options_img = pygame.image.load("images/menu.png").convert_alpha()
         self.option_button = Button(0.5, 0.9, options_img)
 
-        exit_img = pygame.image.load("images/exit.png")
+        exit_img = pygame.image.load("images/exit.png").convert_alpha()
         self.exit_button = Button(0.75, 0.9, exit_img)
 
         self.maze_selector = Selector(
