@@ -26,7 +26,7 @@ class DepthFirstMaze(MazeBase):
         self.stack.append((start_i, start_j))
 
         num_iter = 0
-        while len(self.stack) > 0 and num_iter < (n_x ** 2):
+        while len(self.stack) > 0:
             num_iter += 1
             i, j = self.stack.pop()
             self._mark_visited(i, j)
@@ -45,7 +45,7 @@ class DepthFirstMaze(MazeBase):
         return self.maze
 
     def _pick_start_cell(self) -> Tuple[int, int]:
-        start_i = random.randint(0, self.n_x - 1)
+        start_i = random.randrange(0, self.n_x, 2)
         return start_i, 0
 
     def _mark_visited(self, i: int, j: int) -> None:
