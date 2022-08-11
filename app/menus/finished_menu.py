@@ -2,6 +2,7 @@ from typing import Callable, List, Tuple
 
 import pygame
 
+from common.path import get_resource_path
 from orm import Scores
 from processors import ExitProcessor
 from .base import BaseMenu
@@ -13,10 +14,10 @@ class FinishedMenu(BaseMenu):
         super().__init__()
         self.window = window
 
-        back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
+        back_img = pygame.image.load(get_resource_path("images/arrow-left.png")).convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
-        exit_img = pygame.image.load("images/exit.png")
+        exit_img = pygame.image.load(get_resource_path("images/exit.png")).convert_alpha()
         self.exit_button = Button(0.75, 0.9, exit_img)
         self.score_ticks = 0
         self.tick_rate = 30

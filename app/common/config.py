@@ -1,11 +1,13 @@
 import configparser
 
+from common.path import get_resource_path
+
 
 class AppConfig:
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.path = "resources/user_config.cfg"
-        self.default_path = "resources/default_config.cfg"
+        self.path = get_resource_path("resources/user_config.cfg")
+        self.default_path = get_resource_path("resources/default_config.cfg")
         self.config.read(self.path)
 
     def get(self, config_type: str, key: str) -> object:

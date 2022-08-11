@@ -1,8 +1,8 @@
-from typing import Sequence, List, Tuple, Callable
-
+from typing import List, Tuple, Callable
 import numpy as np
 import pygame
 
+from common.path import get_resource_path
 from mazes import MazeFactory
 from processors import FinishProcessor
 from .base import BaseMenu
@@ -14,7 +14,7 @@ class MazeMenu(BaseMenu):
         super().__init__()
         self.window = window
         self.maze: np.ndarray = None
-        self.maze_buttons: Sequence[MazeSquare] = None
+        self.maze_buttons: np.ndarray = None
         self.square_size: int = None
         self.num_active: int = 0
         self.buffer = 10  # 10px
@@ -29,7 +29,7 @@ class MazeMenu(BaseMenu):
         self.score_ticks = 0
         self.tick_rate = 30
 
-        back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
+        back_img = pygame.image.load(get_resource_path("images/arrow-left.png")).convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
         self.time_rect = pygame.Rect(
