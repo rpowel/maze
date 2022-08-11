@@ -10,7 +10,7 @@ class DepthFirstMaze(MazeBase):
     def __init__(self):
         super().__init__()
         self.visited = set()
-        self.stack = set()
+        self.stack = []
         self.n_x = 0
         self.n_y = 0
         self.maze = None
@@ -23,7 +23,7 @@ class DepthFirstMaze(MazeBase):
         start_i, start_j = self._pick_start_cell()
         self.maze[start_i, start_j] = 0
         self.visited.add((start_i, start_j))
-        self.stack.add((start_i, start_j))
+        self.stack.append((start_i, start_j))
 
         num_iter = 0
         while len(self.stack) > 0 and num_iter < (n_x ** 2):
@@ -33,12 +33,12 @@ class DepthFirstMaze(MazeBase):
             neighbors = self._get_unvisited_neighbors(i, j)
             if len(neighbors) == 0:
                 continue
-            self.stack.add((i, j))
+            self.stack.append((i, j))
             next_i, next_j = self._pick_random_neighbor(neighbors)
             mid_i = (i + next_i) // 2
             mid_j = (j + next_j) // 2
             self._mark_visited(mid_i, mid_j)
-            self.stack.add((next_i, next_j))
+            self.stack.append((next_i, next_j))
             self._mark_visited(next_i, next_j)
 
             yield self.maze
