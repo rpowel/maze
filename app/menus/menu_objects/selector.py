@@ -28,10 +28,10 @@ class Selector(BaseMenuObject):
         self.rect.center = (x, y)
 
         left_img = pygame.image.load("images/menu-left.png").convert_alpha()
-        self.left_button = Button(x_rel_pos - 0.15, y_rel_pos, left_img)
+        self.left_button = Button(x_rel_pos - 0.15, y_rel_pos, left_img, image_scale=0.05)
 
         right_img = pygame.image.load("images/menu-right.png").convert_alpha()
-        self.right_button = Button(x_rel_pos + 0.15, y_rel_pos, right_img)
+        self.right_button = Button(x_rel_pos + 0.15, y_rel_pos, right_img, image_scale=0.05)
 
     def draw(
         self,

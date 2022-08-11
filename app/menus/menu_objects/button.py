@@ -1,5 +1,6 @@
+from typing import List, Optional
+
 import pygame
-from typing import List
 
 from .base import BaseMenuObject
 
@@ -10,13 +11,15 @@ class Button(BaseMenuObject):
         x_rel_pos: int,
         y_rel_pos: int,
         image: pygame.Surface,
+        image_scale: Optional[float] = 0.15
     ) -> None:
         super().__init__()
 
-        self.image = self._scale_image(image, 0.15)
+        self.image = self._scale_image(image, image_scale)
         self._color_button_image(self.image, self._theme.button_color)
         self.rect = self.image.get_rect()
         self.rect.center = self._scale_abs_pos(x_rel_pos, y_rel_pos)
+        self.mask = pygame.mask.from_surface(self.image)
         self.pressed = False
 
     def draw(
@@ -39,9 +42,14 @@ class Button(BaseMenuObject):
         return action
 
     def _check_mouse_pos(self) -> bool:
-        pos = pygame.mouse.get_pos()
-        if self.rect.collidepoint(pos):
-            return True
+        pos_x, pos_y = pygame.mouse.get_pos()
+        # if self.rect.collidepoint(pos):
+        #     return True
+        try:
+            if self.mask.get_at((pos_x - self.rect.x, pos_y - self.rect.y)):
+                return True
+        except IndexError:
+            pass
         return False
 
     def _color_button_image(self, image: pygame.Surface, new_color: pygame.Color) -> pygame.Surface:
