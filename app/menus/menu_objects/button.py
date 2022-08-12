@@ -19,7 +19,6 @@ class Button(BaseMenuObject):
         self._color_button_image(self.image, self._theme.button_color)
         self.rect = self.image.get_rect()
         self.rect.center = self._scale_abs_pos(x_rel_pos, y_rel_pos)
-        self.mask = pygame.mask.from_surface(self.image)
         self.pressed = False
 
     def draw(
@@ -31,8 +30,9 @@ class Button(BaseMenuObject):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.pressed = True
                 if event.type == pygame.MOUSEBUTTONUP:
-                    action = True
-                    self.pressed = False
+                    if self.pressed:
+                        action = True
+                        self.pressed = False
         else:
             self.pressed = False
 
@@ -41,14 +41,9 @@ class Button(BaseMenuObject):
         return action
 
     def _check_mouse_pos(self) -> bool:
-        pos_x, pos_y = pygame.mouse.get_pos()
-        # if self.rect.collidepoint(pos):
-        #     return True
-        try:
-            if self.mask.get_at((pos_x - self.rect.x, pos_y - self.rect.y)):
-                return True
-        except IndexError:
-            pass
+        pos = pygame.mouse.get_pos()
+        if self.rect.collidepoint(pos):
+            return True
         return False
 
     def _color_button_image(self, image: pygame.Surface, new_color: pygame.Color) -> pygame.Surface:
