@@ -62,7 +62,7 @@ class Selector(BaseMenuObject):
             )
             surface.blit(
                 title_text,
-                title_text.get_rect(center=(self.rect.centerx, self.rect.top - 10)),
+                title_text.get_rect(center=(self.rect.centerx, self.rect.top - 20)),
             )
 
         return change, self.current_value

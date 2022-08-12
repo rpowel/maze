@@ -19,7 +19,7 @@ class OptionsMenu(BaseMenu):
         )
         self.show_gen_selector = Selector(
             0.5,
-            0.2,
+            0.25,
             ShowMazeGeneration.list(),
             current_value=self._config.get("maze", "show_generation"),
             title="Show Maze Generation",
