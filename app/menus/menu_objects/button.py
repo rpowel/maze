@@ -31,9 +31,8 @@ class Button(BaseMenuObject):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.pressed = True
                 if event.type == pygame.MOUSEBUTTONUP:
-                    if self.pressed:
-                        action = True
-                        self.pressed = False
+                    action = True
+                    self.pressed = False
         else:
             self.pressed = False
 
