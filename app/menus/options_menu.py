@@ -1,6 +1,8 @@
-import pygame
 from typing import Callable, List, Tuple
 
+import pygame
+
+from common.options import ShowMazeGeneration
 from common.path import get_resource_path
 from common.themes import THEME_LIST
 from processors import OptionsProcessor, RestartProcessor
@@ -15,6 +17,13 @@ class OptionsMenu(BaseMenu):
 
         self.theme_selector = Selector(
             0.5, 0.1, THEME_LIST, current_value=self._theme.name, title="Color Theme"
+        )
+        self.show_gen_selector = Selector(
+            0.5,
+            0.25,
+            ShowMazeGeneration.list(),
+            current_value=self._config.get("maze", "show_generation"),
+            title="Show Maze Generation",
         )
         self.changes = False
 
@@ -42,6 +51,12 @@ class OptionsMenu(BaseMenu):
         if theme_change:
             self.changes = True
             action = OptionsProcessor("display", "theme", theme_selection).process
+
+        show_gen_change, show_gen_selection = self.show_gen_selector.draw(
+            self.window, event_list,
+        )
+        if show_gen_change:
+            action = OptionsProcessor("maze", "show_generation", show_gen_selection).process
 
         if self.reset_button.draw(self.window, event_list):
             self._logger.info("reset button clicked")

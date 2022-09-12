@@ -29,10 +29,10 @@ class Selector(BaseMenuObject):
         self.rect.center = (x, y)
 
         left_img = pygame.image.load(get_resource_path("images/menu-left.png")).convert_alpha()
-        self.left_button = Button(x_rel_pos - 0.15, y_rel_pos, left_img)
+        self.left_button = Button(x_rel_pos - 0.15, y_rel_pos, left_img, image_scale=0.05)
 
         right_img = pygame.image.load(get_resource_path("images/menu-right.png")).convert_alpha()
-        self.right_button = Button(x_rel_pos + 0.15, y_rel_pos, right_img)
+        self.right_button = Button(x_rel_pos + 0.15, y_rel_pos, right_img, image_scale=0.05)
 
     def draw(
         self,
@@ -63,7 +63,7 @@ class Selector(BaseMenuObject):
             )
             surface.blit(
                 title_text,
-                title_text.get_rect(center=(self.rect.centerx, self.rect.top - 10)),
+                title_text.get_rect(center=(self.rect.centerx, self.rect.top - 20)),
             )
 
         return change, self.current_value
