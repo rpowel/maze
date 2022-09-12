@@ -1,12 +1,11 @@
 import os
-import sys
 
 
 def get_resource_path(relative_path):
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+    base_path = os.path.join(
+        os.path.abspath(__file__),
+        os.path.pardir,
+        os.path.pardir,
+    )
 
     return os.path.join(base_path, relative_path)
