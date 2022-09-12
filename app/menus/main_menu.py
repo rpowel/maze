@@ -3,6 +3,7 @@ from typing import Callable, List, Tuple
 import pygame
 
 from common.options import MazeSizes
+from common.path import get_resource_path
 from mazes.maze_factory import MazeTypes
 from processors import ExitProcessor, OptionsProcessor
 from .base import BaseMenu
@@ -14,13 +15,13 @@ class MainMenu(BaseMenu):
         super().__init__()
         self.window = window
 
-        start_img = pygame.image.load("images/play.png").convert_alpha()
+        start_img = pygame.image.load(get_resource_path("images/play.png")).convert_alpha()
         self.start_button = Button(0.25, 0.9, start_img)
 
-        options_img = pygame.image.load("images/menu.png").convert_alpha()
+        options_img = pygame.image.load(get_resource_path("images/menu.png")).convert_alpha()
         self.option_button = Button(0.5, 0.9, options_img)
 
-        exit_img = pygame.image.load("images/exit.png").convert_alpha()
+        exit_img = pygame.image.load(get_resource_path("images/exit.png")).convert_alpha()
         self.exit_button = Button(0.75, 0.9, exit_img)
 
         self.maze_selector = Selector(

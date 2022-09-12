@@ -3,6 +3,7 @@ from typing import Callable, List, Tuple
 import pygame
 
 from common.options import ShowMazeGeneration
+from common.path import get_resource_path
 from common.themes import THEME_LIST
 from processors import OptionsProcessor, RestartProcessor
 from .base import BaseMenu
@@ -26,10 +27,10 @@ class OptionsMenu(BaseMenu):
         )
         self.changes = False
 
-        back_img = pygame.image.load("images/arrow-left.png").convert_alpha()
+        back_img = pygame.image.load(get_resource_path("images/arrow-left.png")).convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
-        reset_img = pygame.image.load("images/recycle.png").convert_alpha()
+        reset_img = pygame.image.load(get_resource_path("images/recycle.png")).convert_alpha()
         self.reset_button = Button(0.75, 0.9, reset_img)
 
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:

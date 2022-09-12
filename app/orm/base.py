@@ -1,6 +1,8 @@
 import peewee as pw
 
-db = pw.SqliteDatabase("data/maze_db.db")
+from common.path import get_resource_path
+
+db = pw.SqliteDatabase(get_resource_path("data/maze_db.db"))
 
 
 class BaseModel(pw.Model):

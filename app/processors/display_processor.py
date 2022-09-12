@@ -1,6 +1,7 @@
 import pygame
 from typing import Tuple
 
+from common.path import get_resource_path
 from .base import BaseProcessor
 
 
@@ -27,7 +28,7 @@ class DisplayProcessor(BaseProcessor):
         """Initialize window/screen for display."""
         surface = pygame.display.set_mode((px_x, px_y))
         pygame.display.set_caption("Amazing Mazes")
-        icon = pygame.image.load("images/icon.png")
+        icon = pygame.image.load(get_resource_path("images/icon.png"))
         pygame.display.set_icon(icon)
         return surface
 

@@ -2,6 +2,7 @@ from typing import List, Optional, Tuple
 
 import pygame
 
+from common.path import get_resource_path
 from .base import BaseMenuObject
 from .button import Button
 
@@ -9,8 +10,8 @@ from .button import Button
 class Selector(BaseMenuObject):
     def __init__(
         self,
-        x_rel_pos: int,
-        y_rel_pos: int,
+        x_rel_pos: float,
+        y_rel_pos: float,
         options: List[str],
         current_value: str,
         title: Optional[str] = "",
@@ -27,10 +28,10 @@ class Selector(BaseMenuObject):
         self.rect = pygame.Rect(x, y, 150, 40)
         self.rect.center = (x, y)
 
-        left_img = pygame.image.load("images/menu-left.png").convert_alpha()
+        left_img = pygame.image.load(get_resource_path("images/menu-left.png")).convert_alpha()
         self.left_button = Button(x_rel_pos - 0.15, y_rel_pos, left_img, image_scale=0.05)
 
-        right_img = pygame.image.load("images/menu-right.png").convert_alpha()
+        right_img = pygame.image.load(get_resource_path("images/menu-right.png")).convert_alpha()
         self.right_button = Button(x_rel_pos + 0.15, y_rel_pos, right_img, image_scale=0.05)
 
     def draw(

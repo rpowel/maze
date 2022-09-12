@@ -20,7 +20,7 @@ class Scores(BaseModel):
         size_x: int = None,
         size_y: int = None,
         num_limit: int = 10,
-    ) -> List[Tuple[str]]:
+    ) -> List[Tuple[str, int, int, str, str]]:
         data_list = []
         data_raw = (
             cls.select(
