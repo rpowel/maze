@@ -8,4 +8,4 @@ def get_resource_path(relative_path):
         os.path.pardir,
     )
 
-    return os.path.join(base_path, relative_path)
+    return os.path.abspath(os.path.join(base_path, relative_path))
