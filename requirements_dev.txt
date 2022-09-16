@@ -1,3 +1,7 @@
-pytest
 black
 pyinstaller
+flake8
+pytest
+pytest-cov
+mypy
+tox
