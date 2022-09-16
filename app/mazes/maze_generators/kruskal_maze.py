@@ -132,17 +132,33 @@ class KruskalMaze(MazeBase):
             for j in range(self.maze.shape[1]):
                 if self.maze[i, j] == 0:
                     if self.maze[i + 1, j] == 0:
-                        self.sets[self.walls[i, j]].update(self.sets[self.walls[i + 2, j]])
-                        self.sets[self.walls[i + 2, j]].update(self.sets[self.walls[i, j]])
+                        self.sets[self.walls[i, j]].update(
+                            self.sets[self.walls[i + 2, j]]
+                        )
+                        self.sets[self.walls[i + 2, j]].update(
+                            self.sets[self.walls[i, j]]
+                        )
                     if self.maze[i - 1, j] == 0:
-                        self.sets[self.walls[i, j]].update(self.sets[self.walls[i - 2, j]])
-                        self.sets[self.walls[i - 2, j]].update(self.sets[self.walls[i, j]])
+                        self.sets[self.walls[i, j]].update(
+                            self.sets[self.walls[i - 2, j]]
+                        )
+                        self.sets[self.walls[i - 2, j]].update(
+                            self.sets[self.walls[i, j]]
+                        )
                     if self.maze[i, j + 1] == 0:
-                        self.sets[self.walls[i, j]].update(self.sets[self.walls[i, j + 2]])
-                        self.sets[self.walls[i, j + 2]].update(self.sets[self.walls[i, j]])
+                        self.sets[self.walls[i, j]].update(
+                            self.sets[self.walls[i, j + 2]]
+                        )
+                        self.sets[self.walls[i, j + 2]].update(
+                            self.sets[self.walls[i, j]]
+                        )
                     if self.maze[i, j - 1] == 0:
-                        self.sets[self.walls[i, j]].update(self.sets[self.walls[i, j - 2]])
-                        self.sets[self.walls[i, j - 2]].update(self.sets[self.walls[i, j]])
+                        self.sets[self.walls[i, j]].update(
+                            self.sets[self.walls[i, j - 2]]
+                        )
+                        self.sets[self.walls[i, j - 2]].update(
+                            self.sets[self.walls[i, j]]
+                        )
 
     @staticmethod
     def _prepare_final(maze: np.ndarray) -> np.ndarray:

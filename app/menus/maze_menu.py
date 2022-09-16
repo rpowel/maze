@@ -31,7 +31,9 @@ class MazeMenu(BaseMenu):
         self.score_ticks = 0
         self.tick_rate = 30
 
-        back_img = pygame.image.load(get_resource_path("images/arrow-left.png")).convert_alpha()
+        back_img = pygame.image.load(
+            get_resource_path("images/arrow-left.png")
+        ).convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
 
         self.time_rect = pygame.Rect(
@@ -45,8 +47,13 @@ class MazeMenu(BaseMenu):
         self.maze_type = self._config.get("maze", "type").lower()
         self.grid_size_x = int(self._config.get("maze", "size_x"))
         self.grid_size_y = int(self._config.get("maze", "size_y"))
-        self.show_generation = self._config.get("maze", "show_generation") == ShowMazeGeneration.TRUE
-        self._logger.info(f"Initializing maze. Type: {self.maze_type}, Size: {self.grid_size_x}x{self.grid_size_y}")
+        self.show_generation = (
+            self._config.get("maze", "show_generation") == ShowMazeGeneration.TRUE
+        )
+        self._logger.info(
+            f"Initializing maze. Type: {self.maze_type}, "
+            + f"Size: {self.grid_size_x}x{self.grid_size_y}"
+        )
 
         self._get_sqare_size(max(self.grid_size_x, self.grid_size_y))
         self.maze_generator = None
@@ -55,7 +62,9 @@ class MazeMenu(BaseMenu):
         self.maze_buttons = np.empty(self.maze.shape, dtype=MazeSquare)
         for i in range(self.maze.shape[0]):
             for j in range(self.maze.shape[1]):
-                self.maze_buttons[i, j] = MazeSquare(self.maze[i, j], self._get_rect(i, j))
+                self.maze_buttons[i, j] = MazeSquare(
+                    self.maze[i, j], self._get_rect(i, j)
+                )
 
     def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
         self.score_ticks += 1
@@ -113,7 +122,7 @@ class MazeMenu(BaseMenu):
     def _get_sqare_size(self, num_cols: int) -> None:
         self.buffer = self.buffer_
         window_width = self.window.get_width()
-        usable_display_size = (window_width - self.buffer * 2)
+        usable_display_size = window_width - self.buffer * 2
         self.square_size = usable_display_size // (num_cols + 2)
 
         self.buffer = (window_width - (self.square_size * (num_cols + 2))) / 2
@@ -123,7 +132,10 @@ class MazeMenu(BaseMenu):
             (i * self.square_size + self.buffer, j * self.square_size + self.buffer),
             (self.square_size, self.square_size),
         )
-        rect.topleft = (i * self.square_size + self.buffer, j * self.square_size + self.buffer)
+        rect.topleft = (
+            i * self.square_size + self.buffer,
+            j * self.square_size + self.buffer,
+        )
         return rect
 
     def _check_click(self, i: int, j: int) -> bool:
@@ -153,7 +165,11 @@ class MazeMenu(BaseMenu):
 
     def _generate_maze(self):
         if not self.maze_generator:
-            self.maze_generator = MazeFactory(self.grid_size_x, self.grid_size_y, maze_type=self.maze_type).process()
+            self.maze_generator = MazeFactory(
+                self.grid_size_x,
+                self.grid_size_y,
+                maze_type=self.maze_type,
+            ).process()
             self.finished_generating = False
             self.num_active = 0
         if not self.finished_generating:

@@ -7,6 +7,7 @@ from common.themes import THEME_MAP, ThemeType
 
 class BaseProcessor(abc.ABC):
     """Base class for processors."""
+
     def __init__(self):
         self._logger = get_logger(class_=self)
         self._config = AppConfig()

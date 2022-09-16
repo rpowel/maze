@@ -16,7 +16,11 @@ class BaseMenuObject(abc.ABC):
         self._theme: ThemeType = THEME_MAP[self._config.get("display", "theme")]
 
     @abc.abstractmethod
-    def draw(self, surface: pygame.Surface, event_list: List[pygame.event.Event]) -> Type[object]:
+    def draw(
+        self,
+        surface: pygame.Surface,
+        event_list: List[pygame.event.Event],
+    ) -> Type[object]:
         ...
 
     def _scale_image(self, image: pygame.Surface, scale: float) -> pygame.Surface:
@@ -26,11 +30,14 @@ class BaseMenuObject(abc.ABC):
 
         image_width = image.get_width()
         image_height = image.get_height()
-        image_aspect_ratio = image_width/image_height
+        image_aspect_ratio = image_width / image_height
 
         scaled_image = pygame.transform.smoothscale(
             image,
-            (int(window_width * scale * ui_scale), int(window_width * scale * ui_scale / image_aspect_ratio))
+            (
+                int(window_width * scale * ui_scale),
+                int(window_width * scale * ui_scale / image_aspect_ratio),
+            ),
         )
 
         return scaled_image

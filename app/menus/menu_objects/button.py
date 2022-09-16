@@ -11,7 +11,7 @@ class Button(BaseMenuObject):
         x_rel_pos: float,
         y_rel_pos: float,
         image: pygame.Surface,
-        image_scale: Optional[float] = 0.15
+        image_scale: Optional[float] = 0.15,
     ) -> None:
         super().__init__()
 

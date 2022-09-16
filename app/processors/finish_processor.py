@@ -3,7 +3,13 @@ from .base import BaseProcessor
 
 
 class FinishProcessor(BaseProcessor):
-    def __init__(self, maze_type: str, size_x: int, size_y: int, time_seconds: int) -> None:
+    def __init__(
+        self,
+        maze_type: str,
+        size_x: int,
+        size_y: int,
+        time_seconds: int,
+    ) -> None:
         super().__init__()
         self.maze_type = maze_type
         self.size_x = size_x
