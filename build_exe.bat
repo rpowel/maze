@@ -6,6 +6,9 @@ if "%1" == "-d" (
 )
 @echo on
 
+set /p version=<.\\app\\VERSION.txt
+echo Build version: %version%
+
 pyinstaller .\app\app.py^
  --name "Maze"^
  --noconfirm^
@@ -23,7 +26,7 @@ if %errorlevel% neq 0 goto EOF
 tar^
  -c^
  -v^
- -f "dist\maze_0.0.1.zip"^
+ -f "dist\maze_%version%.zip"^
  -C .\dist^
   "Maze"
 
