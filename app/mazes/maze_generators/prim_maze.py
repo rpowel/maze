@@ -84,7 +84,7 @@ class PrimMaze(MazeBase):
                     next_right_over = self.maze[x_wall + 1, y_wall - diff_y]
                     next_left_over = self.maze[x_wall - 1, y_wall - diff_y]
 
-            except IndexError as e:  # TODO: Make more specific exception
+            except IndexError:
                 continue
 
             if not (
