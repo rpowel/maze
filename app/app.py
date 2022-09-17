@@ -9,7 +9,7 @@ from processors import DisplayProcessor, ExitProcessor
 def main():
     pygame.init()
     clock = pygame.time.Clock()
-
+    print()
     display = DisplayProcessor()
     main_menu = MainMenu(display.surface)
     maze_menu = MazeMenu(display.surface)
