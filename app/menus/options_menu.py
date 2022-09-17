@@ -1,4 +1,4 @@
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Union
 
 import pygame
 
@@ -11,7 +11,7 @@ from .menu_objects import Button, Selector
 
 
 class OptionsMenu(BaseMenu):
-    def __init__(self, window: pygame.Surface) -> None:
+    def __init__(self, window: pygame.surface.Surface) -> None:
         super().__init__()
         self.window = window
 
@@ -27,14 +27,18 @@ class OptionsMenu(BaseMenu):
         )
         self.changes = False
 
-        back_img = pygame.image.load(get_resource_path("images/arrow-left.png")).convert_alpha()
+        back_img = pygame.image.load(get_resource_path("images/arrow-left.png"))
         self.back_button = Button(0.25, 0.9, back_img)
 
-        reset_img = pygame.image.load(get_resource_path("images/recycle.png")).convert_alpha()
+        reset_img = pygame.image.load(
+            get_resource_path("images/recycle.png")
+        ).convert_alpha()
         self.reset_button = Button(0.75, 0.9, reset_img)
 
-    def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
-        action = ""
+    def draw(
+        self, event_list: List[pygame.event.Event]
+    ) -> Tuple[Union[None, Callable[[], None]], str]:
+        action = None
         menu = "options"
 
         if self.back_button.draw(self.window, event_list):
@@ -42,7 +46,7 @@ class OptionsMenu(BaseMenu):
             if self.changes:
                 action = RestartProcessor().process
             else:
-                action = ""
+                action = None
             menu = "main"
 
         theme_change, theme_selection = self.theme_selector.draw(
@@ -53,10 +57,15 @@ class OptionsMenu(BaseMenu):
             action = OptionsProcessor("display", "theme", theme_selection).process
 
         show_gen_change, show_gen_selection = self.show_gen_selector.draw(
-            self.window, event_list,
+            self.window,
+            event_list,
         )
         if show_gen_change:
-            action = OptionsProcessor("maze", "show_generation", show_gen_selection).process
+            action = OptionsProcessor(
+                "maze",
+                "show_generation",
+                show_gen_selection,
+            ).process
 
         if self.reset_button.draw(self.window, event_list):
             self._logger.info("reset button clicked")

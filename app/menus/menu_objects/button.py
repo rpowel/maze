@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 import pygame
 
@@ -10,8 +10,8 @@ class Button(BaseMenuObject):
         self,
         x_rel_pos: float,
         y_rel_pos: float,
-        image: pygame.Surface,
-        image_scale: Optional[float] = 0.15
+        image: pygame.surface.Surface,
+        image_scale: float = 0.15,
     ) -> None:
         super().__init__()
 
@@ -22,7 +22,9 @@ class Button(BaseMenuObject):
         self.pressed = False
 
     def draw(
-        self, surface: pygame.Surface, event_list: List[pygame.event.Event]
+        self,
+        surface: pygame.surface.Surface,
+        event_list: List[pygame.event.Event],
     ) -> bool:
         action = False
         if self._check_mouse_pos():
@@ -47,9 +49,11 @@ class Button(BaseMenuObject):
         return False
 
     @staticmethod
-    def _color_button_image(image: pygame.Surface, new_color: pygame.Color):
+    def _color_button_image(image: pygame.surface.Surface, new_color: pygame.Color):
         width, height = image.get_size()
-        r, g, b, _ = new_color
+        r = new_color.r
+        g = new_color.g
+        b = new_color.b
         for x in range(width):
             for y in range(height):
                 alpha = image.get_at((x, y))[3]

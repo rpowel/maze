@@ -12,7 +12,11 @@ class MazeSquare(BaseMenuObject):
         self.rect = rect
         self.clicked = False
 
-    def draw(self, surface: pygame.Surface, event_list: List[pygame.event.Event]) -> bool:
+    def draw(
+        self,
+        surface: pygame.surface.Surface,
+        event_list: List[pygame.event.Event],
+    ) -> bool:
         action = False
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):

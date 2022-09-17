@@ -1,7 +1,8 @@
 from random import randint, random
+from typing import Generator
 
-import numpy as np
-from numpy import full, arange, reshape, ravel, ones
+import numpy.typing as npt
+from numpy import full, arange, reshape, ravel, ones, int_
 
 from .base import MazeBase
 
@@ -9,11 +10,13 @@ from .base import MazeBase
 class KruskalMaze(MazeBase):
     def __init__(self):
         super().__init__()
-        self.num_cells_last = None
-        self.maze = None
-        self._repeat_iterations = None
+        self.num_cells_last: int = 0
+        self.maze: npt.NDArray[int_] = full([], 1, dtype=int)
+        self._repeat_iterations: int = 0
 
-    def make_maze(self, n_x, n_y):
+    def make_maze(
+        self, n_x: int, n_y: int
+    ) -> Generator[npt.NDArray[int_], None, npt.NDArray[int_]]:
         self.num_cells_last = -1
         len_x = n_x + 4
         len_y = n_y + 4
@@ -111,9 +114,9 @@ class KruskalMaze(MazeBase):
 
         return None, None
 
-    def _check_final(self):
+    def _check_final(self) -> bool:
         flat = ravel(self.maze)
-        num_cells = len(flat[flat == 0])
+        num_cells: int = len(flat[flat == 0])
         if num_cells == self.num_cells_last:
             self._repeat_iterations += 1
         if self._repeat_iterations > 20:
@@ -123,29 +126,45 @@ class KruskalMaze(MazeBase):
             self.num_cells_last = num_cells
         return False
 
-    def _join_cells(self):
+    def _join_cells(self) -> None:
         id_1, id_2 = self._check_wall()
         if id_1 is None:
-            return None
+            return
 
         for i in range(self.maze.shape[0]):
             for j in range(self.maze.shape[1]):
                 if self.maze[i, j] == 0:
                     if self.maze[i + 1, j] == 0:
-                        self.sets[self.walls[i, j]].update(self.sets[self.walls[i + 2, j]])
-                        self.sets[self.walls[i + 2, j]].update(self.sets[self.walls[i, j]])
+                        self.sets[self.walls[i, j]].update(
+                            self.sets[self.walls[i + 2, j]]
+                        )
+                        self.sets[self.walls[i + 2, j]].update(
+                            self.sets[self.walls[i, j]]
+                        )
                     if self.maze[i - 1, j] == 0:
-                        self.sets[self.walls[i, j]].update(self.sets[self.walls[i - 2, j]])
-                        self.sets[self.walls[i - 2, j]].update(self.sets[self.walls[i, j]])
+                        self.sets[self.walls[i, j]].update(
+                            self.sets[self.walls[i - 2, j]]
+                        )
+                        self.sets[self.walls[i - 2, j]].update(
+                            self.sets[self.walls[i, j]]
+                        )
                     if self.maze[i, j + 1] == 0:
-                        self.sets[self.walls[i, j]].update(self.sets[self.walls[i, j + 2]])
-                        self.sets[self.walls[i, j + 2]].update(self.sets[self.walls[i, j]])
+                        self.sets[self.walls[i, j]].update(
+                            self.sets[self.walls[i, j + 2]]
+                        )
+                        self.sets[self.walls[i, j + 2]].update(
+                            self.sets[self.walls[i, j]]
+                        )
                     if self.maze[i, j - 1] == 0:
-                        self.sets[self.walls[i, j]].update(self.sets[self.walls[i, j - 2]])
-                        self.sets[self.walls[i, j - 2]].update(self.sets[self.walls[i, j]])
+                        self.sets[self.walls[i, j]].update(
+                            self.sets[self.walls[i, j - 2]]
+                        )
+                        self.sets[self.walls[i, j - 2]].update(
+                            self.sets[self.walls[i, j]]
+                        )
 
     @staticmethod
-    def _prepare_final(maze: np.ndarray) -> np.ndarray:
+    def _prepare_final(maze: npt.NDArray[int_]) -> npt.NDArray[int_]:
         maze_temp = ones([maze.shape[0] - 2, maze.shape[1] - 2], dtype=int)
         maze_temp[1:-1, 1:-1] = maze[2:-2, 2:-2]
         return maze_temp

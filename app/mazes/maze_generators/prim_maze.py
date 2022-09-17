@@ -1,6 +1,8 @@
 import random
+from typing import List, Generator
 
 import numpy as np
+import numpy.typing as npt
 from scipy.spatial import cKDTree
 
 from .base import MazeBase
@@ -9,12 +11,14 @@ from .base import MazeBase
 class PrimMaze(MazeBase):
     def __init__(self):
         super().__init__()
-        self.loop = True
-        self.walls = []
-        self.passage = []
-        self.maze = None
+        self.loop: bool = True
+        self.walls: List[List[int]] = []
+        self.passage: List[List[int]] = []
+        self.maze: npt.NDArray[np.int_] = np.array([], dtype=int)
 
-    def make_maze(self, n_x: int, n_y: int) -> np.ndarray:
+    def make_maze(
+        self, n_x: int, n_y: int
+    ) -> Generator[npt.NDArray[np.int_], None, npt.NDArray[np.int_]]:
         self.maze = np.full([n_x + 1, n_y + 1], 1, dtype=int)
         x, y = random.randint(1, n_x - 1), 1
         self.passage.append([x, y])
@@ -37,12 +41,12 @@ class PrimMaze(MazeBase):
         return self.maze
 
     @staticmethod
-    def _prepare_final(maze):
+    def _prepare_final(maze: npt.NDArray[np.int_]) -> npt.NDArray[np.int_]:
         maze_temp = np.ones([maze.shape[0] + 1, maze.shape[1] + 1], dtype=int)
         maze_temp[1:-1, 1:-1] = maze[:-1, :-1]
         return maze_temp
 
-    def _add_walls(self, x, y):
+    def _add_walls(self, x: int, y: int) -> None:
         ghost_maze = np.zeros(
             [self.maze.shape[0] + 2, self.maze.shape[1] + 2], dtype=int
         )
@@ -84,7 +88,7 @@ class PrimMaze(MazeBase):
                     next_right_over = self.maze[x_wall + 1, y_wall - diff_y]
                     next_left_over = self.maze[x_wall - 1, y_wall - diff_y]
 
-            except IndexError as e:  # TODO: Make more specific exception
+            except IndexError:
                 continue
 
             if not (
@@ -98,6 +102,6 @@ class PrimMaze(MazeBase):
             else:
                 return self.walls[rand_wall], rand_wall
 
-    def _find_nearest_passage(self, pos):
+    def _find_nearest_passage(self, pos: List[int]) -> List[int]:
         _, index = cKDTree(self.passage).query(pos)
         return self.passage[int(index)]

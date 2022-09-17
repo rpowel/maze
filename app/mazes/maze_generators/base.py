@@ -1,8 +1,21 @@
 """Base class for maze generator."""
 import abc
 import random
+from typing import Generator
 
-import numpy as np
+import numpy.typing as npt
+from numpy import (
+    arange,
+    argwhere,
+    array,
+    count_nonzero,
+    greater,
+    int_,
+    subtract,
+    unique,
+    where,
+    zeros,
+)
 
 from common.logging import get_logger
 
@@ -13,9 +26,11 @@ class MazeBase(abc.ABC):
     def __init__(self):
         self._logger = get_logger(class_=self)
 
-    def generate(self, n_x: int, n_y: int) -> np.ndarray:
+    def generate(
+        self, n_x: int, n_y: int
+    ) -> Generator[npt.NDArray[int_], None, npt.NDArray[int_]]:
         ready = False
-        prepped_maze = None
+        prepped_maze: npt.NDArray[int_] = array([], dtype=int)
 
         while not ready:
             for maze in self.make_maze(n_x, n_y):
@@ -28,15 +43,17 @@ class MazeBase(abc.ABC):
         return prepped_maze
 
     @abc.abstractmethod
-    def make_maze(self, n_x: int, n_y: int) -> np.ndarray:
+    def make_maze(
+        self, n_x: int, n_y: int
+    ) -> Generator[npt.NDArray[int_], None, npt.NDArray[int_]]:
         ...
 
     @staticmethod
     @abc.abstractmethod
-    def _prepare_final(maze: np.ndarray) -> np.ndarray:
+    def _prepare_final(maze: npt.NDArray[int_]) -> npt.NDArray[int_]:
         ...
 
-    def _set_entrance(self, maze: np.ndarray) -> np.ndarray:
+    def _set_entrance(self, maze: npt.NDArray[int_]) -> npt.NDArray[int_]:
         self._logger.info("Setting entrance")
         while True:
             x, y = random.randint(1, maze.shape[0] - 1), 0
@@ -45,7 +62,7 @@ class MazeBase(abc.ABC):
         maze[x, y] = 2
         return maze
 
-    def _set_exit(self, maze: np.ndarray) -> np.ndarray:
+    def _set_exit(self, maze: npt.NDArray[int_]) -> npt.NDArray[int_]:
         self._logger.info("Setting exit")
         while True:
             x, y = random.randint(1, maze.shape[0] - 1), maze.shape[1] - 1
@@ -54,13 +71,11 @@ class MazeBase(abc.ABC):
         maze[x, y] = 3
         return maze
 
-    import numpy as np
-
-    def check_percolation(self, maze: np.ndarray) -> bool:
+    def check_percolation(self, maze: npt.NDArray[int_]) -> bool:
         """Check if maze path goes from entrance to exit."""
-        maze = np.where(maze > 1, 0, maze)
-        maze = 1 - maze
-        ghost = np.zeros([maze.shape[0] + 2, maze.shape[1] + 2], dtype=int)
+        maze = where(greater(maze, 1), 0, maze)
+        maze = subtract(1, maze)
+        ghost = zeros([maze.shape[0] + 2, maze.shape[1] + 2], dtype=int)
         ghost[1:-1, 1:-1] = maze
         coords, ids = self._find_clusters(ghost)
         check = self._is_percolation(coords, ids, maze.shape[1])
@@ -74,21 +89,21 @@ class MazeBase(abc.ABC):
         belonging to the same (or not) cluster
 
         returns:
-            ids: final np.array of IDs
+            ids: final `array` of IDs
         """
 
-        num_of_ones = np.count_nonzero(grid)
+        num_of_ones = count_nonzero(grid)
 
         # 1-D array of labels (IDs) of each occupied cell. At the beginning,
         # all labels are different and are simply counted like 0,1,2,3,...
-        ids = np.arange(num_of_ones)
+        ids = arange(num_of_ones)
         # 2-D array that storing (y,x) coordinates of occupied cells
-        coords = [list(x) for x in np.argwhere(grid > 0)]
+        coords = [list(x) for x in argwhere(grid > 0)]
 
         while True:
             cw = []
 
-            for i in np.arange(ids.size):
+            for i in arange(ids.size):
                 # extract coordinates of an i-th current cell
                 y, x = coords[i]
 
@@ -104,7 +119,7 @@ class MazeBase(abc.ABC):
                 elif grid[y - 1][x] == 1 and grid[y][x - 1] == 1:
                     first_neighbor_id = ids[coords.index([y - 1, x])]
                     second_neighbor_id = ids[coords.index([y, x - 1])]
-                    ids[i] = np.min([first_neighbor_id, second_neighbor_id])
+                    ids[i] = min([first_neighbor_id, second_neighbor_id])
 
                     # if IDs are unequal then we store them to correct later
                     if first_neighbor_id != second_neighbor_id:
@@ -116,27 +131,27 @@ class MazeBase(abc.ABC):
             # else correct labels
             else:
                 for id1, id2 in cw:
-                    wrong_id = np.max([id1, id2])
-                    correct_id = np.min([id1, id2])
+                    wrong_id = max([id1, id2])
+                    correct_id = min([id1, id2])
                     ids[ids == wrong_id] = correct_id
 
         return coords, ids
 
     @staticmethod
-    def _is_percolation(coords, ids, grid_x_dimension):
+    def _is_percolation(coords, ids, grid_x_dimension) -> bool:
         """
         Define whether there is a percolation in the given grid and what its type.
-        Correctly works only if find_clusters() function were called before
+        Correctly works only if the find_clusters() function were called before
         """
         clusters_coordinates = []
-        for idx in np.unique(ids):
+        for idx in unique(ids):
             clusters_coordinates.append(
                 [coords[k] for k in range(len(ids)) if ids[k] == idx]
             )
 
         # search for percolated cluster(s)
         for cluster in clusters_coordinates:
-            cluster = np.array(cluster).T
-            if (1 in cluster[1]) and (grid_x_dimension in cluster[1]):
+            cluster_ = array(cluster).T
+            if (1 in cluster_[1]) and (grid_x_dimension in cluster_[1]):
                 return True
         return False

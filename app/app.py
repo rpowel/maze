@@ -1,5 +1,5 @@
 import pygame
-import pygame.locals
+from pygame.constants import QUIT as QUIT_EVENT
 
 from common.events import RESTART_EVENT
 from menus import FinishedMenu, MainMenu, MazeMenu, OptionsMenu
@@ -28,7 +28,7 @@ def main():
         display.process()
 
         for event in event_list:
-            if event.type == pygame.locals.QUIT:
+            if event.type == QUIT_EVENT:
                 ExitProcessor().process()
             if event.type == RESTART_EVENT:
                 main()

@@ -1,4 +1,4 @@
-from typing import List, Tuple, Type
+from typing import List, Tuple, Union, Sequence
 
 import pygame
 
@@ -12,7 +12,7 @@ class Table(BaseMenuObject):
         rel_x_pos: float,
         rel_y_pos: float,
         headers: List[str],
-        data: List[Tuple[str]],
+        data: Sequence[Tuple[Union[str, int], ...]],
     ) -> None:
         super().__init__()
         self.title = title
@@ -29,13 +29,13 @@ class Table(BaseMenuObject):
         self.row_height = (window_height - self.rect_top - 150) // self.num_rows
 
     def draw(
-        self, surface: pygame.Surface, event_list: List[pygame.event.Event]
-    ) -> Type[object]:
+        self, surface: pygame.surface.Surface, event_list: List[pygame.event.Event]
+    ) -> None:
         self._draw_title(surface)
         self._draw_headers(surface)
         self._draw_data(surface)
 
-    def _draw_title(self, surface: pygame.Surface) -> None:
+    def _draw_title(self, surface: pygame.surface.Surface) -> None:
         rect = pygame.Rect(
             int(self._config.get("display", "window_width")) * 0.4,
             max(
@@ -55,7 +55,7 @@ class Table(BaseMenuObject):
             text.get_rect(center=rect.center),
         )
 
-    def _draw_headers(self, surface: pygame.Surface) -> None:
+    def _draw_headers(self, surface: pygame.surface.Surface) -> None:
         for i, row in enumerate(self.data):
             for j, val in enumerate(row):
                 rect = pygame.Rect(
@@ -69,7 +69,7 @@ class Table(BaseMenuObject):
                 )
                 surface.blit(text, text.get_rect(center=rect.center))
 
-    def _draw_data(self, surface: pygame.Surface) -> None:
+    def _draw_data(self, surface: pygame.surface.Surface) -> None:
         for i, header in enumerate(self.headers):
             rect = pygame.Rect(
                 self.rect_left + (self.col_width * i),

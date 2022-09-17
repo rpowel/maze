@@ -1,3 +1,4 @@
+from .base import MazeBase
 from .depth_first_maze import DepthFirstMaze
 from .kruskal_maze import KruskalMaze
 from .prim_maze import PrimMaze
@@ -7,6 +8,7 @@ from .recursive_division_maze import RecursiveDivisionMaze
 __all__ = [
     "DepthFirstMaze",
     "KruskalMaze",
+    "MazeBase",
     "PrimMaze",
     "RandomMaze",
     "RecursiveDivisionMaze",

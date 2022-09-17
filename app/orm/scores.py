@@ -16,9 +16,9 @@ class Scores(BaseModel):
     @classmethod
     def top_n_scores(
         cls,
-        maze_type: str = None,
-        size_x: int = None,
-        size_y: int = None,
+        maze_type: str = "",
+        size_x: int = 0,
+        size_y: int = 0,
         num_limit: int = 10,
     ) -> List[Tuple[str, int, int, str, str]]:
         data_list = []

@@ -1,7 +1,8 @@
 import random
-from typing import List, Tuple
+from typing import List, Tuple, Generator
 
 import numpy as np
+import numpy.typing as npt
 
 from .base import MazeBase
 
@@ -13,9 +14,11 @@ class DepthFirstMaze(MazeBase):
         self.stack = []
         self.n_x = 0
         self.n_y = 0
-        self.maze = None
+        self.maze: npt.NDArray[np.int_] = np.full([], 1, dtype=int)
 
-    def make_maze(self, n_x: int, n_y: int) -> np.ndarray:
+    def make_maze(
+        self, n_x: int, n_y: int
+    ) -> Generator[npt.NDArray[np.int_], None, npt.NDArray[np.int_]]:
         self.n_x = n_x
         self.n_y = n_y
         self.maze = np.full([n_x, n_y], 1, dtype=int)
@@ -74,7 +77,7 @@ class DepthFirstMaze(MazeBase):
         return neighbors[n]
 
     @staticmethod
-    def _prepare_final(maze: np.ndarray) -> np.ndarray:
+    def _prepare_final(maze: npt.NDArray[np.int_]) -> npt.NDArray[np.int_]:
         maze_temp = np.ones([maze.shape[0] + 1, maze.shape[1] + 1], dtype=int)
         maze_temp[1:-1, 1:-1] = maze[:-1, :-1]
         return maze_temp

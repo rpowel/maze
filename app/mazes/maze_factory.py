@@ -1,8 +1,10 @@
-from typing import List
+from typing import List, Generator
 
 import numpy as np
+import numpy.typing as npt
 
 from .maze_generators import (
+    MazeBase,
     DepthFirstMaze,
     KruskalMaze,
     PrimMaze,
@@ -34,7 +36,8 @@ class MazeFactory:
         self.n_y = n_y
         self.maze_type = maze_type
 
-    def process(self) -> np.ndarray:
+    def process(self) -> Generator[npt.NDArray[np.int_], None, npt.NDArray[np.int_]]:
+        generator: MazeBase
         if self.maze_type == MazeTypes.DEPTH_FIRST:
             generator = DepthFirstMaze()
         elif self.maze_type == MazeTypes.KRUSKAL:
@@ -48,9 +51,8 @@ class MazeFactory:
         else:
             raise NotImplementedError(f"{self.maze_type} not implemented")
 
-        maze_step = None
+        maze: npt.NDArray[np.int_] = np.zeros([self.n_x, self.n_y], dtype=int)
         for maze in generator.generate(self.n_x, self.n_y):
-            maze_step = maze
-            yield maze_step
+            yield maze
 
-        return maze_step
+        return maze
