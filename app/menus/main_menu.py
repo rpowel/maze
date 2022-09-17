@@ -1,4 +1,4 @@
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Union
 
 import pygame
 
@@ -11,7 +11,7 @@ from .menu_objects import Button, Selector
 
 
 class MainMenu(BaseMenu):
-    def __init__(self, window: pygame.Surface) -> None:
+    def __init__(self, window: pygame.surface.Surface) -> None:
         super().__init__()
         self.window = window
 
@@ -52,17 +52,19 @@ class MainMenu(BaseMenu):
             title="Maze Size Y",
         )
 
-    def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
-        action = ""
+    def draw(
+        self, event_list: List[pygame.event.Event]
+    ) -> Tuple[Union[None, Callable[[], None]], str]:
+        action = None
         menu = "main"
 
         if self.start_button.draw(self.window, event_list):
             self._logger.info("Start button clicked.")
-            action = ""
+            action = None
             menu = "maze"
         if self.option_button.draw(self.window, event_list):
             self._logger.info("Options button clicked.")
-            action = ""
+            action = None
             menu = "options"
         if self.exit_button.draw(self.window, event_list):
             self._logger.info("Exit button clicked.")

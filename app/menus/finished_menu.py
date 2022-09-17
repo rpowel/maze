@@ -1,4 +1,4 @@
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Union
 
 import pygame
 
@@ -10,7 +10,7 @@ from .menu_objects import Button, Table
 
 
 class FinishedMenu(BaseMenu):
-    def __init__(self, window: pygame.Surface) -> None:
+    def __init__(self, window: pygame.surface.Surface) -> None:
         super().__init__()
         self.window = window
 
@@ -42,8 +42,10 @@ class FinishedMenu(BaseMenu):
             self.window.get_rect().right * 0.5 - 50, 200, 100, 100
         )
 
-    def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
-        action = ""
+    def draw(
+        self, event_list: List[pygame.event.Event]
+    ) -> Tuple[Union[None, Callable[[], None]], str]:
+        action = None
         menu = "finished"
         time_seconds = (self.score_ticks // self.tick_rate) % 60
         time_minutes = (self.score_ticks // self.tick_rate) // 60
@@ -94,7 +96,7 @@ class FinishedMenu(BaseMenu):
 
         if self.back_button.draw(self.window, event_list):
             self._logger.info("Start button clicked.")
-            action = ""
+            action = None
             menu = "main"
         if self.exit_button.draw(self.window, event_list):
             self._logger.info("Exit button clicked.")
@@ -103,8 +105,8 @@ class FinishedMenu(BaseMenu):
 
         data = Scores.top_n_scores(
             maze_type=self._config.get("maze", "type"),
-            size_x=self._config.get("maze", "size_x"),
-            size_y=self._config.get("maze", "size_y"),
+            size_x=int(self._config.get("maze", "size_x")),
+            size_y=int(self._config.get("maze", "size_y")),
             num_limit=5,
         )
         headers = ["Type", "Size X", "Size Y", "Time", "Date Finished"]

@@ -22,7 +22,7 @@ class AppConfig:
         except FileNotFoundError:
             return False
 
-    def get(self, config_type: str, key: str) -> object:
+    def get(self, config_type: str, key: str) -> str:
         self.config.read(self.path)
         return self.config[config_type].get(key)
 

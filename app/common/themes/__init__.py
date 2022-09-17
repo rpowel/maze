@@ -1,5 +1,4 @@
-from typing import TypeVar
-
+from .base import BaseTheme
 from .default_theme import DefaultTheme
 from .light_theme import LightTheme
 
@@ -10,10 +9,8 @@ THEME_MAP = {
 
 THEME_LIST = list(THEME_MAP.keys())
 
-ThemeType = TypeVar("ThemeType", DefaultTheme, LightTheme)
-
 __all__ = [
+    "BaseTheme",
     "THEME_LIST",
     "THEME_MAP",
-    "ThemeType",
 ]

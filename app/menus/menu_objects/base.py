@@ -1,10 +1,11 @@
 import abc
+from typing import List, Tuple, Union
+
 import pygame
-from typing import List, Tuple, Type
 
 from common.config import AppConfig
 from common.logging import get_logger
-from common.themes import THEME_MAP, ThemeType
+from common.themes import BaseTheme, THEME_MAP
 
 
 class BaseMenuObject(abc.ABC):
@@ -13,17 +14,19 @@ class BaseMenuObject(abc.ABC):
     def __init__(self):
         self._logger = get_logger(class_=self)
         self._config = AppConfig()
-        self._theme: ThemeType = THEME_MAP[self._config.get("display", "theme")]
+        self._theme: BaseTheme = THEME_MAP[self._config.get("display", "theme")]
 
     @abc.abstractmethod
     def draw(
         self,
-        surface: pygame.Surface,
+        surface: pygame.surface.Surface,
         event_list: List[pygame.event.Event],
-    ) -> Type[object]:
+    ) -> Union[None, bool, Tuple[bool, str]]:
         ...
 
-    def _scale_image(self, image: pygame.Surface, scale: float) -> pygame.Surface:
+    def _scale_image(
+        self, image: pygame.surface.Surface, scale: float
+    ) -> pygame.surface.Surface:
         """Scale images relative to window resolution."""
         window_width = int(self._config.get("display", "WINDOW_WIDTH"))
         ui_scale = int(self._config.get("display", "UI_SCALING")) / 100

@@ -44,7 +44,7 @@ class Selector(BaseMenuObject):
 
     def draw(
         self,
-        surface: pygame.Surface,
+        surface: pygame.surface.Surface,
         event_list: List[pygame.event.Event],
     ) -> Tuple[bool, str]:
 

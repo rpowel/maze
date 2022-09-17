@@ -6,7 +6,7 @@ class ShowMazeGeneration:
     FALSE = "False"
 
     @classmethod
-    def list(cls) -> List[bool]:
+    def list(cls) -> List[str]:
         return [
             cls.TRUE,
             cls.FALSE,

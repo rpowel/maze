@@ -1,5 +1,6 @@
-import pygame
 from typing import Tuple
+
+import pygame
 
 from common.path import get_resource_path
 from .base import BaseProcessor
@@ -24,7 +25,7 @@ class DisplayProcessor(BaseProcessor):
         return width, height
 
     @staticmethod
-    def _init_display(px_x: int, px_y: int) -> pygame.Surface:
+    def _init_display(px_x: int, px_y: int) -> pygame.surface.Surface:
         """Initialize window/screen for display."""
         surface = pygame.display.set_mode((px_x, px_y))
         pygame.display.set_caption("Amazing Mazes")
@@ -34,7 +35,7 @@ class DisplayProcessor(BaseProcessor):
 
     def _draw_background(self):
         color = self._theme.background
-        background = pygame.Surface(
+        background = pygame.surface.Surface(
             (self.window_width, self.window_height),
         )
         background.fill(color)

@@ -1,5 +1,7 @@
-from typing import List, Tuple, Callable
+from typing import List, Tuple, Callable, Union, Generator
+
 import numpy as np
+import numpy.typing as npt
 import pygame
 
 from common.options import ShowMazeGeneration
@@ -11,25 +13,29 @@ from .menu_objects import Button, MazeSquare
 
 
 class MazeMenu(BaseMenu):
-    def __init__(self, window: pygame.Surface) -> None:
+    def __init__(self, window: pygame.surface.Surface) -> None:
         super().__init__()
-        self.window = window
-        self.maze: np.ndarray = None
-        self.maze_buttons: np.ndarray = None
-        self.square_size: int = None
+        self.window: pygame.surface.Surface = window
+        self.maze: npt.NDArray[np.int_] = np.array([])
+        self.maze_buttons: npt.NDArray[np.int_] = np.array([])
+        self.square_size: int = 0
         self.num_active: int = 0
         self.buffer = 10  # 10px
         self.buffer_ = 10
 
-        self.maze_type = None
-        self.grid_size_x = None
-        self.grid_size_y = None
-        self.show_generation = None
-        self.maze_generator = None
-        self.finished_generating = False
+        self.maze_type: str = ""
+        self.grid_size_x: int = 0
+        self.grid_size_y: int = 0
+        self.show_generation: bool = (
+            self._config.get("maze", "show_generation") == ShowMazeGeneration.TRUE
+        )
+        self.maze_generator: Union[
+            None, Generator[npt.NDArray[np.int_], None, npt.NDArray[np.int_]]
+        ] = None
+        self.finished_generating: bool = False
 
-        self.score_ticks = 0
-        self.tick_rate = 30
+        self.score_ticks: int = 0
+        self.tick_rate: int = 30
 
         back_img = pygame.image.load(
             get_resource_path("images/arrow-left.png")
@@ -55,7 +61,7 @@ class MazeMenu(BaseMenu):
             + f"Size: {self.grid_size_x}x{self.grid_size_y}"
         )
 
-        self._get_sqare_size(max(self.grid_size_x, self.grid_size_y))
+        self._get_sqare_size(max((self.grid_size_x, self.grid_size_y)))
         self.maze_generator = None
         self._generate_maze()
 
@@ -66,11 +72,13 @@ class MazeMenu(BaseMenu):
                     self.maze[i, j], self._get_rect(i, j)
                 )
 
-    def draw(self, event_list: List[pygame.event.Event]) -> Tuple[Callable, str]:
+    def draw(
+        self, event_list: List[pygame.event.Event]
+    ) -> Tuple[Union[None, Callable[[], None]], str]:
         self.score_ticks += 1
         if self.back_button.draw(self.window, event_list):
             self.finished_generating = True
-            return "", "main"
+            return None, "main"
 
         self._generate_maze()
 
@@ -105,7 +113,7 @@ class MazeMenu(BaseMenu):
             ).process
             return processor, "finished"
 
-        return "", "maze"
+        return None, "maze"
 
     def _decide_color(self, maze_val: int) -> pygame.Color:
         if maze_val == 0:
@@ -118,6 +126,8 @@ class MazeMenu(BaseMenu):
             return self._theme.end_color
         if maze_val == 4:
             return self._theme.path_color
+        else:
+            raise ValueError(f"No color for maze square value, {maze_val=}")
 
     def _get_sqare_size(self, num_cols: int) -> None:
         self.buffer = self.buffer_
@@ -125,7 +135,7 @@ class MazeMenu(BaseMenu):
         usable_display_size = window_width - self.buffer * 2
         self.square_size = usable_display_size // (num_cols + 2)
 
-        self.buffer = (window_width - (self.square_size * (num_cols + 2))) / 2
+        self.buffer = (window_width - (self.square_size * (num_cols + 2))) // 2
 
     def _get_rect(self, i: int, j: int) -> pygame.Rect:
         rect = pygame.Rect(
@@ -163,7 +173,7 @@ class MazeMenu(BaseMenu):
             return False
         return True
 
-    def _generate_maze(self):
+    def _generate_maze(self) -> None:
         if not self.maze_generator:
             self.maze_generator = MazeFactory(
                 self.grid_size_x,
