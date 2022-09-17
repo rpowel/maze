@@ -1,11 +1,7 @@
 name: App Tests
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - ./app/**
+  - pull_request
 
 jobs:
   test:
