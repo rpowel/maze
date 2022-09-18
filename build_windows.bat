@@ -6,7 +6,7 @@ if "%1" == "-d" (
 )
 @echo on
 
-set /p version=<.\\app\\VERSION.txt
+set /p version=<.\\VERSION.txt
 echo Build version: %version%
 
 pyinstaller .\app\app.py^

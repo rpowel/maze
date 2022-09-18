@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version=$(cat ./app/VERSION.txt)
+version=$(cat ./VERSION.txt)
 
 pyinstaller ./app/app.py \
   --name "Maze" \
