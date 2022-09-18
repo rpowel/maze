@@ -29,7 +29,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements_dev.txt
       - name: Run Build
-        run: build_windows.bat
+        run: ./build_windows.bat
 
   build_macos:
     runs-on: macos-latest
