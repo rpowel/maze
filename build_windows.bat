@@ -26,15 +26,9 @@ if %errorlevel% neq 0 goto EOF
 tar^
  -c^
  -v^
- -f "dist\maze_%version%.zip"^
+ -f "dist\maze_windows_%version%.zip"^
  -C .\dist^
   "Maze"
-
-@echo off
-if %errorlevel% neq 0 goto EOF
-@echo on
-
-.\dist\Maze\Maze.exe
 
 :EOF
 @echo on
