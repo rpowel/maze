@@ -1,7 +1,8 @@
 black
-pyinstaller
 flake8
+mypy
+Pillow
+pyinstaller
 pytest
 pytest-cov
-mypy
 tox
