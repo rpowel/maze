@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version=$(cat ./app/VERSION.txt)
+version=$(cat ./VERSION.txt)
 
 pyinstaller ./app/app.py \
   --name "Maze" \
@@ -20,7 +20,5 @@ if [ $retval -ne 0 ]; then
 fi
 
 cd dist || exit
-zip -9Tr ./Maze_macos_"$version".zip ./Maze.app
+zip -9Tr ./maze_macos_"$version".zip ./Maze.app
 cd .. || exit
-
-./dist/Maze/Maze
