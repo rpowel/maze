@@ -10,6 +10,7 @@ from .maze_generators import (
     PrimMaze,
     RecursiveDivisionMaze,
     RandomMaze,
+    WilsonMaze,
 )
 
 
@@ -19,6 +20,7 @@ class MazeTypes:
     PRIM = "prim"
     RANDOM = "random"
     RECURSIVE = "recursive"
+    WILSON = "wilson"
 
     @classmethod
     def list(cls) -> List[str]:
@@ -27,6 +29,7 @@ class MazeTypes:
             cls.KRUSKAL,
             cls.PRIM,
             cls.RECURSIVE,
+            cls.WILSON,
         ]
 
 
@@ -48,6 +51,8 @@ class MazeFactory:
             generator = RandomMaze()
         elif self.maze_type == MazeTypes.RECURSIVE:
             generator = RecursiveDivisionMaze()
+        elif self.maze_type == MazeTypes.WILSON:
+            generator = WilsonMaze()
         else:
             raise NotImplementedError(f"{self.maze_type} not implemented")
 
