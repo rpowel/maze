@@ -41,19 +41,21 @@ class AStarSolver(BaseMazeSolver):
 
         while current_node:
             solution[current_node.cell] = 6
-            current_node = current_node.parent
             yield solution
+            if not current_node.parent:
+                break
+            current_node = current_node.parent
         return solution
 
     @staticmethod
     def _get_start_cell(maze: npt.NDArray[np.int_]) -> Tuple[int, int]:
         enter = np.where(maze == 2)
-        return enter[0], enter[1] + 1
+        return int(enter[0]), int(enter[1] + 1)
 
     @staticmethod
     def _get_end_cell(maze: npt.NDArray[np.int_]) -> Tuple[int, int]:
         exit_ = np.where(maze == 3)
-        return exit_[0], exit_[1] - 1
+        return int(exit_[0]), int(exit_[1] - 1)
 
     @staticmethod
     def _get_valid_neighbors(
@@ -78,7 +80,7 @@ class AStarSolver(BaseMazeSolver):
     @staticmethod
     def _optimize_open_nodes(open_nodes: Set["AStarNode"]) -> Set["AStarNode"]:
         optimal_nodes = open_nodes.copy()
-        overlap_ij: List[Tuple[int, int]] = []
+        overlap_ij: List[Tuple["AStarNode", "AStarNode"]] = []
         for i, node_i in enumerate(open_nodes):
             for j, node_j in enumerate(open_nodes):
                 if node_i == node_j:
@@ -86,8 +88,8 @@ class AStarSolver(BaseMazeSolver):
                 if node_i.cell == node_j.cell:
                     overlap_ij.append((node_i, node_j))
 
-        for i, j in overlap_ij:
-            worse_node = max((i, j), key=attrgetter("g"))
+        for node_i, node_j in overlap_ij:
+            worse_node = max((node_i, node_j), key=attrgetter("g"))
             if worse_node in optimal_nodes:
                 optimal_nodes.remove(worse_node)
         return optimal_nodes
