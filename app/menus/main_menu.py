@@ -6,6 +6,7 @@ from common.options import MazeSizes
 from common.path import get_resource_path
 from mazes.maze_factory import MazeTypes
 from processors import ExitProcessor, OptionsProcessor
+from solvers.solver_factory import SolverTypes
 from .base import BaseMenu
 from .menu_objects import Button, Selector
 
@@ -51,6 +52,13 @@ class MainMenu(BaseMenu):
             self._config.get("maze", "size_y"),
             title="Maze Size Y",
         )
+        self.solver_selector = Selector(
+            0.5,
+            0.4,
+            SolverTypes.list(),
+            self._config.get("maze", "solver"),
+            title="Solver Type",
+        )
 
     def draw(
         self, event_list: List[pygame.event.Event]
@@ -81,6 +89,10 @@ class MainMenu(BaseMenu):
         size_change, maze_size = self.size_y_selector.draw(self.window, event_list)
         if size_change:
             action = OptionsProcessor("maze", "size_y", maze_size).process
+            menu = "main"
+        solver_change, solver_type = self.solver_selector.draw(self.window, event_list)
+        if solver_change:
+            action = OptionsProcessor("maze", "solver", solver_type).process
             menu = "main"
 
         return action, menu

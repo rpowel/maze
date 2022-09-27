@@ -46,6 +46,16 @@ class BaseTheme(abc.ABC):
 
     @property
     @abc.abstractmethod
+    def solution_search_color(self) -> pygame.Color:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def solution_path_color(self) -> pygame.Color:
+        ...
+
+    @property
+    @abc.abstractmethod
     def text_color(self) -> pygame.Color:
         ...
 

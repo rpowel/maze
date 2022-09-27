@@ -8,6 +8,7 @@ from common.options import ShowMazeGeneration
 from common.path import get_resource_path
 from mazes import MazeFactory
 from processors import FinishProcessor
+from solvers import SolverFactory
 from .base import BaseMenu
 from .menu_objects import Button, MazeSquare
 
@@ -34,6 +35,13 @@ class MazeMenu(BaseMenu):
         ] = None
         self.finished_generating: bool = False
 
+        self.solver_type: str = ""
+        self.solver_generator: Union[
+            None, Generator[npt.NDArray[np.int_], None, npt.NDArray[np.int_]]
+        ] = None
+        self.solve = False
+        self.finished_solving: bool = False
+
         self.score_ticks: int = 0
         self.tick_rate: int = 30
 
@@ -41,6 +49,11 @@ class MazeMenu(BaseMenu):
             get_resource_path("images/arrow-left.png")
         ).convert_alpha()
         self.back_button = Button(0.25, 0.9, back_img)
+
+        solver_img = pygame.image.load(
+            get_resource_path("images/solution.png")
+        ).convert_alpha()
+        self.solve_button = Button(0.5, 0.9, solver_img)
 
         self.time_rect = pygame.Rect(
             self.window.get_rect().right - 150,
@@ -51,6 +64,7 @@ class MazeMenu(BaseMenu):
 
     def init_maze(self) -> None:
         self.maze_type = self._config.get("maze", "type").lower()
+        self.solver_type = self._config.get("maze", "solver").lower()
         self.grid_size_x = int(self._config.get("maze", "size_x"))
         self.grid_size_y = int(self._config.get("maze", "size_y"))
         self.show_generation = (
@@ -62,7 +76,14 @@ class MazeMenu(BaseMenu):
         )
 
         self._get_sqare_size(max((self.grid_size_x, self.grid_size_y)))
+
         self.maze_generator = None
+        self.finished_generating = False
+
+        self.solver_generator = None
+        self.solve = False
+        self.finished_solving = False
+
         self._generate_maze()
 
         self.maze_buttons = np.empty(self.maze.shape, dtype=MazeSquare)
@@ -78,7 +99,11 @@ class MazeMenu(BaseMenu):
         self.score_ticks += 1
         if self.back_button.draw(self.window, event_list):
             self.finished_generating = True
+            self.finished_solving = True
             return None, "main"
+
+        if self.solve_button.draw(self.window, event_list):
+            self.solve = True
 
         self._generate_maze()
 
@@ -126,6 +151,10 @@ class MazeMenu(BaseMenu):
             return self._theme.end_color
         if maze_val == 4:
             return self._theme.path_color
+        if maze_val == 5:
+            return self._theme.solution_search_color
+        if maze_val == 6:
+            return self._theme.solution_path_color
         else:
             raise ValueError(f"No color for maze square value, {maze_val=}")
 
@@ -195,3 +224,15 @@ class MazeMenu(BaseMenu):
                 self.maze = [step for step in self.maze_generator][-1].T
                 self.score_ticks = 0
                 self.finished_generating = True
+
+        elif self.solve and (not self.finished_solving):
+            if not self.solver_generator:
+                self.solver_generator = SolverFactory(
+                    solver_type=self.solver_type,
+                ).process(self.maze.T)
+                self.finished_solving = False
+            try:
+                self.maze = next(self.solver_generator).T
+            except StopIteration as stop:
+                self.finished_solving = True
+                self.maze = stop.value.T
