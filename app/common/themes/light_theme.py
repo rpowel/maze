@@ -5,6 +5,14 @@ from .base import BaseTheme
 
 class LightTheme(BaseTheme):
     @property
+    def solution_path_color(self) -> pygame.Color:
+        return pygame.Color(0, 0, 255)
+
+    @property
+    def solution_search_color(self) -> pygame.Color:
+        return pygame.Color(0, 255, 0)
+
+    @property
     def normal_font(self) -> pygame.font.Font:
         return pygame.font.SysFont("Calibri", 20)
 
