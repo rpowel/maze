@@ -71,11 +71,11 @@ class BaseMazeSolver(abc.ABC):
     @staticmethod
     def _check_for_end(
         closed_nodes: Set["SolverNode"], end_cell: Tuple[int, int]
-    ) -> bool:
+    ) -> Union[None, "SolverNode"]:
         for node in closed_nodes:
             if node.cell == end_cell:
-                return True
-        return False
+                return node
+        return None
 
 
 class SolverNode:
