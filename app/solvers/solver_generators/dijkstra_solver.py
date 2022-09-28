@@ -1,21 +1,17 @@
-from operator import attrgetter
 from typing import Generator
 
 import numpy as np
-import numpy.typing as npt
+from numpy import typing as npt
 
 from .base import BaseMazeSolver, SolverNode
 
 
-class AStarSolver(BaseMazeSolver):
+class DijkstraSolver(BaseMazeSolver):
     def solve(
-        self,
-        maze: npt.NDArray[np.int_],
+        self, maze: npt.NDArray[np.int_]
     ) -> Generator[npt.NDArray[np.int_], None, npt.NDArray[np.int_]]:
-        self._logger.info("Starting A* Maze Solver")
 
         solution = np.copy(maze)
-
         start_cell = self._get_start_cell(maze)
         end_cell = self._get_end_cell(maze)
 
@@ -24,10 +20,9 @@ class AStarSolver(BaseMazeSolver):
         closed_nodes = set()
 
         while open_nodes:
-            current_node = min(open_nodes, key=attrgetter("f"))
-            solution[current_node.cell] = 5
+            current_node = open_nodes.pop()
             closed_nodes.add(current_node)
-            open_nodes.remove(current_node)
+            solution[current_node.cell] = 5
 
             available_neighbors = self._get_valid_neighbors(
                 maze, current_node, closed_nodes
