@@ -193,7 +193,7 @@ class MazeSection:
         self, other_section_list: List["MazeSection"]
     ) -> "MazeSection":
         """From a list of other sections, find the section that is closest."""
-        min_distance = -1.
+        min_distance = -1.0
         closest_section = self
         for j, other in enumerate(other_section_list):
             distance = self.get_distance_to_center(other)
@@ -216,7 +216,7 @@ class MazeSection:
 
     def get_shortest_bridge(self, other_section: "MazeSection") -> Set[Tuple[int, int]]:
         """Get a set of fewest cells that would connect self to `other_section`."""
-        min_distance_i = -1.
+        min_distance_i = -1.0
         closest_cell_i = (-1, -1)
         for i, cell_i in enumerate(self.cells):
             distance = other_section.get_distance_to_cell(cell_i)
@@ -228,7 +228,7 @@ class MazeSection:
                 min_distance_i = distance
                 closest_cell_i = cell_i
 
-        min_distance_j = -1.
+        min_distance_j = -1.0
         closest_cell_j = (-1, -1)
         for j, cell_j in enumerate(other_section.cells):
             distance = self.get_distance_to_cell(cell_j)

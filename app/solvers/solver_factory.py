@@ -3,17 +3,19 @@ from typing import Generator, List
 import numpy.typing as npt
 from numpy import int_, zeros
 
-from .solver_generators import AStarSolver, DijkstraSolver
+from .solver_generators import AStarSolver, BidirectionalDijkstraSolver, DijkstraSolver
 
 
 class SolverTypes:
     A_STAR = "a*"
+    BIDIRECTIONAL_DIJKSTRA = "bidirectional"
     DIJKSTRA = "dijkstra"
 
     @classmethod
     def list(cls) -> List[str]:
         return [
             cls.A_STAR,
+            cls.BIDIRECTIONAL_DIJKSTRA,
             cls.DIJKSTRA,
         ]
 
@@ -27,6 +29,8 @@ class SolverFactory:
     ) -> Generator[npt.NDArray[int_], None, npt.NDArray[int_]]:
         if self.solver_type == SolverTypes.A_STAR:
             generator = AStarSolver().solve(maze)
+        elif self.solver_type == SolverTypes.BIDIRECTIONAL_DIJKSTRA:
+            generator = BidirectionalDijkstraSolver().solve(maze)
         elif self.solver_type == SolverTypes.DIJKSTRA:
             generator = DijkstraSolver().solve(maze)
         else:
