@@ -69,7 +69,8 @@ class OptionsMenu(BaseMenu):
 
         if self.reset_button.draw(self.window, event_list):
             self._logger.info("reset button clicked")
-            self.changes = True
             self._config.reset()
+            action = RestartProcessor().process
+            menu = "main"
 
         return action, menu
