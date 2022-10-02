@@ -8,7 +8,6 @@ from .maze_generators import (
     DepthFirstMaze,
     KruskalMaze,
     PrimMaze,
-    RecursiveDivisionMaze,
     RandomMaze,
     WilsonMaze,
 )
@@ -19,7 +18,6 @@ class MazeTypes:
     KRUSKAL = "kruskal"
     PRIM = "prim"
     RANDOM = "random"
-    RECURSIVE = "recursive"
     WILSON = "wilson"
 
     @classmethod
@@ -28,7 +26,6 @@ class MazeTypes:
             cls.DEPTH_FIRST,
             cls.KRUSKAL,
             cls.PRIM,
-            cls.RECURSIVE,
             cls.WILSON,
         ]
 
@@ -49,8 +46,6 @@ class MazeFactory:
             generator = PrimMaze()
         elif self.maze_type == MazeTypes.RANDOM:
             generator = RandomMaze()
-        elif self.maze_type == MazeTypes.RECURSIVE:
-            generator = RecursiveDivisionMaze()
         elif self.maze_type == MazeTypes.WILSON:
             generator = WilsonMaze()
         else:
