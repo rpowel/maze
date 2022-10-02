@@ -102,8 +102,9 @@ class MazeMenu(BaseMenu):
             self.finished_solving = True
             return None, "main"
 
-        if self.solve_button.draw(self.window, event_list):
-            self.solve = True
+        if self.finished_generating and not self.finished_solving:
+            if self.solve_button.draw(self.window, event_list):
+                self.solve = True
 
         self._generate_maze()
 
