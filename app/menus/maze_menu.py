@@ -106,7 +106,11 @@ class MazeMenu(BaseMenu):
             if self.solve_button.draw(self.window, event_list):
                 self.solve = True
 
-        self._generate_maze()
+        if not self.finished_generating:
+            self._generate_maze()
+
+        if self.solve and not self.finished_solving:
+            self._solve_maze()
 
         time_seconds = (self.score_ticks // self.tick_rate) % 60
         time_minutes = (self.score_ticks // self.tick_rate) // 60
@@ -122,6 +126,9 @@ class MazeMenu(BaseMenu):
                     self._decide_color(maze_val=self.maze[i, j]),
                     rect,
                 )
+
+                if not self.finished_generating:
+                    continue
 
                 if self.maze_buttons[i, j].draw(None, None):
                     if self._check_click(i, j):
@@ -212,28 +219,27 @@ class MazeMenu(BaseMenu):
             ).process()
             self.finished_generating = False
             self.num_active = 0
-        if not self.finished_generating:
-            if self.show_generation:
-                try:
-                    self.maze = next(self.maze_generator).T
-                    self.score_ticks = 0
-                except StopIteration as stop:
-                    self.finished_generating = True
-                    self.maze = stop.value.T
-                    self.score_ticks = 0
-            else:
-                self.maze = [step for step in self.maze_generator][-1].T
-                self.score_ticks = 0
-                self.finished_generating = True
-
-        elif self.solve and (not self.finished_solving):
-            if not self.solver_generator:
-                self.solver_generator = SolverFactory(
-                    solver_type=self.solver_type,
-                ).process(self.maze.T)
-                self.finished_solving = False
+        if self.show_generation:
             try:
-                self.maze = next(self.solver_generator).T
+                self.maze = next(self.maze_generator).T
+                self.score_ticks = 0
             except StopIteration as stop:
-                self.finished_solving = True
+                self.finished_generating = True
                 self.maze = stop.value.T
+                self.score_ticks = 0
+        else:
+            self.maze = [step for step in self.maze_generator][-1].T
+            self.score_ticks = 0
+            self.finished_generating = True
+
+    def _solve_maze(self) -> None:
+        if not self.solver_generator:
+            self.solver_generator = SolverFactory(
+                solver_type=self.solver_type,
+            ).process(self.maze.T)
+            self.finished_solving = False
+        try:
+            self.maze = next(self.solver_generator).T
+        except StopIteration as stop:
+            self.finished_solving = True
+            self.maze = stop.value.T
