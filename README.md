@@ -1,6 +1,8 @@
 # Maze
 
-Create unique mazes either in GUI or directly into a numpy array!
+
+https://user-images.githubusercontent.com/48132667/193464347-a795a755-4066-4862-8fbe-e66bfd5ca800.mp4
+
 
 ## Installation
 
@@ -27,6 +29,6 @@ the size and type of maze you would like to use.
 ```shell
 # Install pytest
 pip install pytest
-# from app directory
+
 pytest
 ```
